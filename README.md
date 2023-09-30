@@ -1,10 +1,13 @@
 # [AnkiCraft](https://ankiweb.net/shared/info/368161874)
 [![Addon Download](https://github-production-user-asset-6210df.s3.amazonaws.com/72304646/263796774-b60e19fa-60b3-456e-9d82-a261fe0af1b8.png)](https://ankiweb.net/shared/info/368161874)
 ## DEMO
-https://github.com/Foxy-null/AnkiCraft/assets/72304646/e926bc5f-a6fa-4b92-9f7b-86bceae78ce0
+
+https://github.com/Foxy-null/AnkiCraft/assets/72304646/355f4167-3d23-457d-8688-142d62f6cbe2
 <div style="text-align: center;"></div>
 
-![Screenshot 2023-08-29 142954](https://github.com/Foxy-null/AnkiCraft/assets/72304646/7651f153-4f8e-4a0e-a7d8-80ecb5b6c603)
+![263916722-7651f153-4f8e-4a0e-a7d8-80ecb5b6c603](https://github.com/Foxy-null/AnkiCraft/assets/72304646/6b08e57c-dd14-4fe9-829e-4af061deac37)
+![anki_20230930_155827_458](https://github.com/Foxy-null/AnkiCraft/assets/72304646/8034b639-5cf9-4715-a5bd-e2b3c6d3997d)
+*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and Minecraft theme
 
 ## Change from the original Killstreaks addon
  
@@ -16,7 +19,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/e926bc5f-a6fa-4b92-9f7b-8
 
 ## Requirements
  - [This addon](https://ankiweb.net/shared/info/368161874)
- - [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350)
+ - [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350) or [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
  - Minecraft SFX ([Minecraft.zip or user_files.zip](https://github.com/Foxy-null/AnkiCraft/releases))
   (I recommend [Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/releases) one.)
 
