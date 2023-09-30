@@ -2,7 +2,8 @@
 [![Addon Download](https://github-production-user-asset-6210df.s3.amazonaws.com/72304646/263796774-b60e19fa-60b3-456e-9d82-a261fe0af1b8.png)](https://ankiweb.net/shared/info/368161874)
 ## DEMO
 
-https://github.com/Foxy-null/AnkiCraft/assets/72304646/355f4167-3d23-457d-8688-142d62f6cbe2
+https://github.com/Foxy-null/AnkiCraft/assets/72304646/f21bce71-9bc3-4f52-a7f1-674c948ea320
+
 <div style="text-align: center;"></div>
 
 ![anki_20230930_160544_459](https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6)
