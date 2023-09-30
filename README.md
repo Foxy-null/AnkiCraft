@@ -7,7 +7,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/355f4167-3d23-457d-8688-1
 
 ![anki_20230930_160544_459](https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6)
 ![anki_20230930_155827_458](https://github.com/Foxy-null/AnkiCraft/assets/72304646/8034b639-5cf9-4715-a5bd-e2b3c6d3997d)
-*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and Minecraft theme
+*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [Minecraft theme](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip)
 
 ## Change from the original Killstreaks addon
  
@@ -20,8 +20,8 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/355f4167-3d23-457d-8688-1
 ## Requirements
  - [This addon](https://ankiweb.net/shared/info/368161874)
  - [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350) or [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
- - Minecraft SFX ([Minecraft.zip or user_files.zip](https://github.com/Foxy-null/AnkiCraft/releases))
-  (I recommend [Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/releases) one.)
+ - Minecraft SFX ([[Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) or [user_files.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/user_files.zip)](https://github.com/Foxy-null/AnkiCraft/releases))
+  (I recommend [Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) one.)
 
 
 ## Installation
@@ -64,6 +64,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/355f4167-3d23-457d-8688-1
     So, Almost all issues of Killstreaks addon is not fixed yet.
  - I have only poor skill for both of English and Coding.
  - This is my first work on GitHub
+ - old repository was deleted for cleaning up my Git LFS Storage, sorry...
 
 ## Special Thanks
 ### To the creator of the wonderful Killstreaks add-on: [jac241](https://github.com/jac241)
