@@ -21,7 +21,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/f21bce71-9bc3-4f52-a7f1-6
 ## Requirements
  - [This addon](https://ankiweb.net/shared/info/368161874)
  - [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350) or [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
- - Minecraft SFX ([[Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) or [user_files.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/user_files.zip)](https://github.com/Foxy-null/AnkiCraft/releases))
+ - Minecraft SFX ([[Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) or [user_files.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/user_files.zip)]
   (I recommend [Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) one.)
 
 
