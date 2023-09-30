@@ -31,21 +31,21 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/355f4167-3d23-457d-8688-1
 
 2. **(recommended) Option 1**: Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
 
-    **Option 2**: Download [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350).
+    **(legacy) Option 2**: Download [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350).
 
 3. **(recommended) Option 1**: add `Minecraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`)
 
-    **Option 2**: replace `user_files` folder with `%appdata%\Anki2\addons21\1167194350\user_files` (It'll be like `...\addons21\1167194350\user_files\again`)
+    **(legacy) Option 2**: replace `user_files` folder with `%appdata%\Anki2\addons21\1167194350\user_files` (It'll be like `...\addons21\1167194350\user_files\again`)
 
 ### 日本語
 1. AnkiWebから[AnkiCraft](https://ankiweb.net/shared/info/368161874)をインストールする。
 2. アドオンのコンフィグから"language"の値を"ja"に変更
 3. **（おすすめ）オプション１**：[Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)をインストールする。
    
-    **オプション２**：[Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350)をインストールする。
+    **（旧型）オプション２**：[Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350)をインストールする。
 5. **（おすすめ）オプション１**：`Minecraft`フォルダーをテーマフォルダー内に置く。（こんな感じ→`%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`）
 
-    **オプション２**：`user_files` フォルダーを `%appdata%\Anki2\addons21\1167194350\user_files`と置き換える。
+    **（旧型）オプション２**：`user_files` フォルダーを `%appdata%\Anki2\addons21\1167194350\user_files`と置き換える。
 こんな感じ→`...\addons21\1167194350\user_files\again`
  
 ## Usage
