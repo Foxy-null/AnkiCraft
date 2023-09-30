@@ -1,0 +1,77 @@
+<link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
+{% macro game_classes(selected_game_id, game_id) -%}
+  {% if game_id == selected_game_id %}
+game-medals game-medals--current
+  {% else %}
+game-medals
+  {% endif %}
+{%- endmacro %}
+<style>
+  @font-face
+  {
+  font-family: 美咲ゴシック;
+  src: url('https://cdn.leafscape.be/misaki/misaki_gothic_web.woff2')
+      format("woff2");
+  }
+  * {font-family: 'Minecraftia', '美咲ゴシック', sans-serif;}
+  .medals-overview {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 750px;
+    margin-top: 2em;
+    justify-content: center;
+    text-align: center;
+  }
+  .medal-type {
+    width: 7.4em;
+    margin-bottom: 0.75em;
+  }
+  .medal-type h4 {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  .medal-type p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  .game-medals {
+    display: none;
+  }
+  .game-medals.game-medals--current {
+    display: block;
+  }
+  p.small {
+    font-size: .8em
+  }
+</style>
+<center id="anki_killstreaks">
+  <h2>{{ header_text }}</h2>
+  {% for game_id, medal_types in medal_types_by_game_id.items() %}
+    <div class="{{ game_classes(game_id, selected_game_id) }}" data-game-id="{{ game_id }}">
+      {% if medal_types|length > 0 %}
+        <h3>{{ game_names_by_id[game_id] }}</h3>
+        <div class="medals-overview">
+            {% for medal_type in medal_types %}
+              <div class="medal-type">
+                <img src="{{ medal_type.img_base64 }}">
+                <h4>{{ medal_type.name }}</h4>
+                <p>{{ medal_type.count }}</p>
+              </div>
+            {% endfor %}
+        </div>
+      {% else %}
+        <p>まだ{{ game_names_by_id[game_id] }}で獲得したアイテムはありません</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <label for="game_select">次のバイオーム内で獲得したアイテムを表示:</label>
+  <select id="game_select">
+    {% for game_id, name in game_names_by_id.items() %}
+      <option value="{{ game_id }}" {{ "selected" if game_id == selected_game_id else "" }}>{{ name }}</option>
+    {% endfor %}
+    <option value="_all">すべてのバイオーム</option>
+  </select>
+  <p class="small">
+    どのバイオームを探検するかはAnkiCraftのメニューで変更できます。
+  </p>
+</center>
