@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------
 
 from .. import six
-from six.moves import configparser as CP
+import configparser as CP
 
 from .parser import IniheritMixin
 from .interpolation import BasicInterpolationMixin
@@ -47,10 +47,6 @@ def install_globally():
                 '_iniherit_' + attr, getattr(target, attr))
       meth = getattr(source, attr)
       if six.callable(meth):
-        if six.PY2:
-          import new
-          meth = new.instancemethod(meth.__func__, None, target)
-        else:
           meth = meth.__get__(None, target)
       setattr(target, attr, meth)
 

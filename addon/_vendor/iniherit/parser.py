@@ -11,8 +11,8 @@ import os.path
 import warnings
 
 from .. import six
-from six.moves import configparser as CP
-from six.moves import urllib
+import configparser as CP
+import urllib
 try:
   from collections import OrderedDict
 except ImportError:
@@ -183,17 +183,12 @@ class IniheritMixin(object):
 
   #----------------------------------------------------------------------------
   def _im_setraw(self, parser, section, option, value):
-    if six.PY3 and hasattr(parser, '_interpolation'):
-      # todo: don't do this for systems that have
-      #       http://bugs.python.org/issue21265 fixed
       try:
         tmp = parser._interpolation.before_set
         parser._interpolation.before_set = lambda self,s,o,v,*a,**k: v
         _real_RawConfigParser.set(parser, section, option, value)
       finally:
         parser._interpolation.before_set = tmp
-    else:
-      _real_RawConfigParser.set(parser, section, option, value)
 
   #----------------------------------------------------------------------------
   def _interpolate_with_vars(self, parser, section, option, rawval):

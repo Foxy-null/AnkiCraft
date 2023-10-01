@@ -10,7 +10,7 @@ import re
 import os
 
 from .. import six
-from six.moves import configparser as CP
+import configparser as CP
 
 #------------------------------------------------------------------------------
 
