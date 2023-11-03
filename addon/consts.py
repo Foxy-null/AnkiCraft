@@ -16,11 +16,14 @@ anki21 = True
 
 if not (os.environ.get("KILLSTREAKS_ENV", "production") == "test"):
     from anki import version
+    from anki.utils import pointVersion
     anki21 = version.startswith("2.1.")
 
 sys_encoding = sys.getfilesystemencoding()
 
 if anki21:
+    addon_path = os.path.dirname(__file__)
+elif pointVersion() >= 231000:
     addon_path = os.path.dirname(__file__)
 else:
     addon_path = os.path.dirname(__file__).decode(sys_encoding)
