@@ -5,7 +5,8 @@ if not (os.environ.get("KILLSTREAKS_ENV", "production") == "test"):
     from aqt.qt import *
 else:
     mw = None
-    from PyQt5.Qt import QObject, pyqtSignal
+    
+    from PyQt5.qt import QObject, pyqtSignal
 
 from .config import local_conf
 

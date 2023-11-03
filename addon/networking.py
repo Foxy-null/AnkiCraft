@@ -9,6 +9,7 @@ import traceback
 if not (os.environ.get("KILLSTREAKS_ENV", "production") == "test"):
     from aqt.qt import QObject, pyqtSignal
 else:
+    
     from PyQt5.Qt import QObject, pyqtSignal
 
 from ._vendor import attr

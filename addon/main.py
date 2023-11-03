@@ -33,7 +33,6 @@ from anki.stats import CollectionStats
 from .config import local_conf
 from .controllers import (
     ProfileController,
-    ReviewingController,
     build_on_answer_wrapper,
     call_method_on_object_from_factory_function,
 )
@@ -197,12 +196,12 @@ def showToolTip(medals, period=local_conf["duration"]):
         % (medals_html),
         aw,
     )
-    lab.setFrameStyle(QFrame.Panel)
+    lab.setFrameStyle(QFrame.Shape.Panel)
     lab.setLineWidth(2)
-    lab.setWindowFlags(Qt.ToolTip)
+    lab.setWindowFlags(Qt.WindowType.ToolTip)
     p = QPalette()
-    p.setColor(QPalette.Window, QColor(local_conf["tooltip_color"]))
-    p.setColor(QPalette.WindowText, QColor("#f7f7f7"))
+    p.setColor(QPalette.ColorRole.Window, QColor(local_conf["tooltip_color"]))
+    p.setColor(QPalette.ColorRole.WindowText, QColor("#f7f7f7"))
     lab.setPalette(p)
     vdiff = (local_conf["image_height"] - 128) / 2
     lab.move(aw.mapToGlobal(QPoint(0, -260 - vdiff + aw.height())))
