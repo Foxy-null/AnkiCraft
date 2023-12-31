@@ -7,10 +7,10 @@ assignees: Foxy-null
 
 ---
 
-**Describe the bug**
+## Describe the bug
 A clear and concise description of what the bug is.
 
-**Debug Information**
+## Debug Information
 Paste full error sentence here (do not contain your private information)
 ```
 
@@ -22,19 +22,19 @@ ImportError: cannot import name 'iniherit' from '368161874._vendor' (C:\Users\Fo
 
 ```
 
-**To Reproduce**
+## To Reproduce
 Steps to reproduce the behavior:
 1. Open Anki
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Screenshots**
+## Screenshots (optional)
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
+## Environment
  - OS: [e.g. Windows 11]
- - Anki Version [e.g. 2.1.55]
+ - Anki Version: [e.g. 23.10]
 
-**Additional context**
+## Additional context (optional)
 Add any other context about the problem here.
