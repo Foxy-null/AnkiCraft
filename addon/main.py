@@ -39,16 +39,7 @@ from .controllers import (
 from .networking import process_queue, stop_thread_on_app_close
 from .persistence import day_start_time, min_datetime
 from ._vendor import attr
-if local_conf["OnlyShowTooltip"] == "false" and local_conf["language"] == "en":
-    from .views import (
-        MedalsOverviewHTML,
-        TodaysMedalsJS,
-        TodaysMedalsForDeckJS,
-        js_content,
-    )
-    from .streaks import get_stores_by_game_id
-    TMJS = TodaysMedalsJS
-elif local_conf["OnlyShowTooltip"] == "false" and local_conf["language"] == "ja":
+if local_conf["language"] == "ja":
     from .viewsjp import (
         MedalsOverviewHTML,
         TodaysMedalsJS,
@@ -58,7 +49,14 @@ elif local_conf["OnlyShowTooltip"] == "false" and local_conf["language"] == "ja"
     from .streaksjp import get_stores_by_game_id
     TMJS = TodaysMedalsJS
 else:
-    TMJS = None
+    from .views import (
+        MedalsOverviewHTML,
+        TodaysMedalsJS,
+        TodaysMedalsForDeckJS,
+        js_content,
+    )
+    from .streaks import get_stores_by_game_id
+    TMJS = TodaysMedalsJS
 
 if local_conf["language"] == "ja":
         from .streaksjp import get_stores_by_game_id
@@ -133,8 +131,24 @@ def _wrap_anki_objects(profile_controller):
         "before",
     )
 
-    if local_conf["OnlyShowTooltip"] == "true":
+    if local_conf["WhereToShowMedals"] == "disabled":
         pass
+    elif local_conf["WhereToShowMedals"] == "oldstat":
+        todays_medals_injector = partial(
+            inject_medals_with_js,
+            view=TMJS,
+            get_achievements_repo=profile_controller.get_achievements_repo,
+            get_current_game_id=profile_controller.get_current_game_id,
+        )
+        CollectionStats.todayStats = wrap(
+            old=CollectionStats.todayStats,
+            new=partial(
+                show_medals_overview,
+                get_achievements_repo=profile_controller.get_achievements_repo,
+                get_current_game_id=profile_controller.get_current_game_id,
+            ),
+            pos="around",
+        )
     else:
         todays_medals_injector = partial(
             inject_medals_with_js,
@@ -223,50 +237,58 @@ def closeTooltip():
         _tooltipTimer.stop()
         _tooltipTimer = None
 
-
-def medal_html(medal):
-    return """
-        <td valign="middle" style="text-align:center">
-            <img src="{img_src}">
-            <center><b>{call} ×1</b><br></center>
-        </td>
-    """.format(
-        img_src=medal.medal_image, call=medal.call,
-    )
-
-if local_conf["OnlyShowTooltip"] == "true":
-    pass
+if local_conf["show_image_on_tooltip"] == "false":
+    def medal_html(medal):
+        return """
+            <td valign="middle" style="text-align:center">
+                <center><b>{call} ×1</b></center>
+            </td>
+        """.format(
+            img_src=medal.medal_image, call=medal.call,
+        )
 else:
-    def inject_medals_with_js(
-        self: Overview, get_achievements_repo, get_current_game_id, view
-    ):
-        self.mw.web.eval(
-            view(
-                achievements=get_achievements_repo().todays_achievements(
-                    cutoff_datetime(self)
-                ),
-                current_game_id=get_current_game_id(),
-            )
+    def medal_html(medal):
+        return """
+            <td valign="middle" style="text-align:center">
+                <img src="{img_src}">
+                <center><b>{call} ×1</b><br></center>
+            </td>
+        """.format(
+            img_src=medal.medal_image, call=medal.call,
         )
-        self.mw.web.eval(js_content("medals_overview.js"))
 
 
-    def inject_medals_for_deck_overview(
-        self: Overview, get_achievements_repo, get_current_game_id,
-    ):
-        decks = get_current_deck_and_children(deck_manager=self.mw.col.decks)
-        deck_ids = [d.id_ for d in decks]
 
-        self.mw.web.eval(
-            TodaysMedalsForDeckJS(
-                achievements=get_achievements_repo().todays_achievements_for_deck_ids(
-                    day_start_time=cutoff_datetime(self), deck_ids=deck_ids
-                ),
-                deck=decks[0],
-                current_game_id=get_current_game_id(),
-            )
+def inject_medals_with_js(
+    self: Overview, get_achievements_repo, get_current_game_id, view
+):
+    self.mw.web.eval(
+        view(
+            achievements=get_achievements_repo().todays_achievements(
+                cutoff_datetime(self)
+            ),
+            current_game_id=get_current_game_id(),
         )
-        self.mw.web.eval(js_content("medals_overview.js"))
+    )
+    self.mw.web.eval(js_content("medals_overview.js"))
+
+
+def inject_medals_for_deck_overview(
+    self: Overview, get_achievements_repo, get_current_game_id,
+):
+    decks = get_current_deck_and_children(deck_manager=self.mw.col.decks)
+    deck_ids = [d.id_ for d in decks]
+
+    self.mw.web.eval(
+        TodaysMedalsForDeckJS(
+            achievements=get_achievements_repo().todays_achievements_for_deck_ids(
+                day_start_time=cutoff_datetime(self), deck_ids=deck_ids
+            ),
+            deck=decks[0],
+            current_game_id=get_current_game_id(),
+        )
+    )
+    self.mw.web.eval(js_content("medals_overview.js"))
 
 
 @attr.s
@@ -307,14 +329,11 @@ def show_medals_overview(
         start_datetime=_get_start_datetime_for_period(self.type),
     )
 
-    if local_conf["OnlyShowTooltip"] == "true":
-        pass
-    else:
-        return _old(self) + MedalsOverviewHTML(
-            achievements=achievements,
-            header_text=header_text,
-            current_game_id=get_current_game_id(),
-        )
+    return _old(self) + MedalsOverviewHTML(
+        achievements=achievements,
+        header_text=header_text,
+        current_game_id=get_current_game_id(),
+    )
 
 if local_conf["language"] == "ja":
     def _get_stats_header(deck_name, scope_is_whole_collection, period):
