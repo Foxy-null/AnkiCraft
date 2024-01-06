@@ -9,42 +9,39 @@ from .toolz import unique, join, groupby
 from .streaksjp import get_all_displayable_medals, all_game_ids
 from .config import local_conf
 
-if local_conf["OnlyShowTooltip"] == "true":
-    pass
-else:
-    def MedalsOverviewHTML(achievements, header_text, current_game_id):
-        return (
-            MedalsOverview(
-                medal_types=medal_types(achievements),
-                header_text=header_text,
-                current_game_id=current_game_id,
-            )
-            + MedalsOverviewScript()
+def MedalsOverviewHTML(achievements, header_text, current_game_id):
+    return (
+        MedalsOverview(
+            medal_types=medal_types(achievements),
+            header_text=header_text,
+            current_game_id=current_game_id,
         )
+        + MedalsOverviewScript()
+    )
 
 
-    def MedalsOverviewScript():
-        return f"<script>{js_content('medals_overview.js')}</script>"
+def MedalsOverviewScript():
+    return f"<script>{js_content('medals_overview.js')}</script>"
 
 
-    def TodaysMedalsJS(achievements, current_game_id):
-        return AppendingInjector(
-            html=MedalsOverview(
-                medal_types=medal_types(achievements),
-                header_text="未回収の全てのアイテム:",
-                current_game_id=current_game_id,
-            )
+def TodaysMedalsJS(achievements, current_game_id):
+    return AppendingInjector(
+        html=MedalsOverview(
+            medal_types=medal_types(achievements),
+            header_text="未回収の全てのアイテム:",
+            current_game_id=current_game_id,
         )
+    )
 
 
-    def TodaysMedalsForDeckJS(achievements, deck, current_game_id):
-        return AppendingInjector(
-            html=MedalsOverview(
-                medal_types=medal_types(achievements),
-                header_text=f'「{deck.name}」内で獲得した未回収のアイテム:',
-                current_game_id=current_game_id,
-            )
+def TodaysMedalsForDeckJS(achievements, deck, current_game_id):
+    return AppendingInjector(
+        html=MedalsOverview(
+            medal_types=medal_types(achievements),
+            header_text=f'「{deck.name}」内で獲得した未回収のアイテム:',
+            current_game_id=current_game_id,
         )
+    )
 
 
 def AppendingInjector(html):
@@ -106,39 +103,36 @@ class MedalType:
 
 _templates_dir = Path(__file__).parent / "templates"
 
-if local_conf["OnlyShowTooltip"] == "true":
-    pass
-else:
-    def MedalsOverview(
-        medal_types,
-        current_game_id,
-        header_text="このセッションで獲得したアイテム:",
-    ):
-        if local_conf["FontRange"] == "disabled":
-            with open(_templates_dir / "medals_overview-jp.html", "r", encoding='utf-8') as f:
-                template = Template(f.read())
-        elif local_conf["FontRange"] == "all":
-            with open(_templates_dir / "medals_overview-jp_all.html", "r", encoding='utf-8') as f:
-                template = Template(f.read())
-        else:
-            with open(_templates_dir / "medals_overview-jp_limit.html", "r", encoding='utf-8') as f:
-                template = Template(f.read())
+def MedalsOverview(
+    medal_types,
+    current_game_id,
+    header_text="このセッションで獲得したアイテム:",
+):
+    if local_conf["FontRange"] == "disabled":
+        with open(_templates_dir / "medals_overview-jp.html", "r", encoding='utf-8') as f:
+            template = Template(f.read())
+    elif local_conf["FontRange"] == "all":
+        with open(_templates_dir / "medals_overview-jp_all.html", "r", encoding='utf-8') as f:
+            template = Template(f.read())
+    else:
+        with open(_templates_dir / "medals_overview-jp_limit.html", "r", encoding='utf-8') as f:
+            template = Template(f.read())
 
-        return template.render(
-            medal_types_by_game_id=medal_types_by_game_id(
-                medal_types, all_game_ids
-            ),
-            header_text=header_text,
-            game_names_by_id=dict(
-                halo_3="洞窟",
-                mw2="海バイオーム",
-                halo_5="草原バイオーム",
-                halo_infinite="食料畑",
-                vanguard="森林バイオーム",
-                mwr="未設定のバイオーム",
-            ),
-            selected_game_id=current_game_id,
-        )
+    return template.render(
+        medal_types_by_game_id=medal_types_by_game_id(
+            medal_types, all_game_ids
+        ),
+        header_text=header_text,
+        game_names_by_id=dict(
+            halo_3="洞窟",
+            mw2="海バイオーム",
+            halo_5="草原バイオーム",
+            halo_infinite="食料畑",
+            vanguard="森林バイオーム",
+            mwr="未設定のバイオーム",
+        ),
+        selected_game_id=current_game_id,
+    )
 
 
 def js_content(filename):

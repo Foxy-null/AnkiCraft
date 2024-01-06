@@ -60,7 +60,7 @@ class ProfileSettingsDialog(QDialog):
 
     def keyPressEvent(self, event) -> None:
         key = event.key()
-        if key == Qt.Key_Return or key == Qt.Key_Enter:
+        if key == Qt.Key.Key_Return or key == Qt.Key.Key_Enter:
             event.ignore()
         else:
             super().keyPressEvent(event)

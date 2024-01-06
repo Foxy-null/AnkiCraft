@@ -370,8 +370,8 @@ HALO_MULTIKILL_STATES = [
     MultikillNoMedalState(),
     MultikillMedalState(
         id_="乾燥した昆布",
-        medal_image=image_path("Dried_Kelp.webp"),
-        name="乾燥した昆布",
+        medal_image=image_path("Cobbled_Deepslate.webp"),
+        name="深層岩の丸石",
         game_id="halo_3",
         rank=2,
     ),
@@ -573,7 +573,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Prismarine_Shard.png"),
         name="プリズマリンの欠片",
         game_id="mw2",
-        call="プリズマリンブロックをクラフト可能",
+        # call="プリズマリンブロックをクラフト可能",
         rank=8,
     ),
     KillingSpreeMedalState(
@@ -581,7 +581,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Prismarine_Crystal.png"),
         name="プリズマリンクリスタル",
         game_id="mw2",
-        call="シーランタンをクラフト可能",
+        # call="シーランタンをクラフト可能",
         rank=9,
     ),
 EndState(

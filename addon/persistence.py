@@ -11,7 +11,7 @@ from .config import local_conf
 if local_conf["language"] == "en":
     from .streaks import get_all_displayable_medals
 elif local_conf["language"] == "ja":
-    from .streaks import get_all_displayable_medals
+    from .streaksjp import get_all_displayable_medals
 from .toolz import join
 
 min_datetime = datetime(
