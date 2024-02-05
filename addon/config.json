@@ -1,6 +1,7 @@
 {
     "language": "en",
-    "OnlyShowTooltip": "false",
+    "WhereToShowMedals": "all",
+    "show_image_on_tooltip": "true",
     "FontRange": "overview",
     "duration": 1500,
     "image_height": 128,

@@ -27,9 +27,7 @@ class MultikillMixin:
     ):
         delta = question_answered_at - question_shown_at
         return (
-            timedelta(seconds=min_interval_s)
-            <= delta
-            < timedelta(seconds=interval_s)
+            timedelta(seconds=min_interval_s) <= delta < timedelta(seconds=interval_s)
         )
 
 
@@ -84,6 +82,7 @@ class MultikillMedalState(MultikillMixin):
     def next_streak_index(self, current_streak_index):
         return current_streak_index + 1
 
+
 class EndState(MultikillMixin):
     def __init__(self, medal_state, index_to_return_to):
         self._medal_state = medal_state
@@ -117,7 +116,6 @@ class KillingSpreeMedalState(KillingSpreeMixin):
     _call = attr.ib(default=None)
     is_displayable_medal = attr.ib(default=True)
     is_earnable_medal = attr.ib(default=True)
-
 
     @property
     def call(self):
@@ -190,8 +188,7 @@ class Store:
     def on_answer(self, card_did_pass):
         return self.__class__(
             state_machines=[
-                m.on_answer(card_did_pass=card_did_pass)
-                for m in self.state_machines
+                m.on_answer(card_did_pass=card_did_pass) for m in self.state_machines
             ]
         )
 
@@ -217,14 +214,17 @@ class Store:
             m.states for m in self.state_machines
         )
 
-        return frozenset(
-            medal for medal in all_medals if medal.is_displayable_medal
-        )
+        return frozenset(medal for medal in all_medals if medal.is_displayable_medal)
 
 
 class QuestionShownState:
     def __init__(
-        self, states, question_shown_at, interval_s=8, current_streak_index=0, addon_is_installed_and_enabled=addons.is_installed_and_enabled
+        self,
+        states,
+        question_shown_at,
+        interval_s=8,
+        current_streak_index=0,
+        addon_is_installed_and_enabled=addons.is_installed_and_enabled,
     ):
         self.states = states
         self._question_shown_at = question_shown_at
@@ -284,9 +284,7 @@ class AnswerShownState:
         self._current_streak_index = current_streak_index
 
     def on_answer(self, card_did_pass):
-        if self._advancement_requirements_met(
-            card_did_pass, self._answer_shown_at
-        ):
+        if self._advancement_requirements_met(card_did_pass, self._answer_shown_at):
             return self._advanced_state_machine()
         elif card_did_pass:
             # want this one to count for first kill in new streak
@@ -302,15 +300,11 @@ class AnswerShownState:
             current_streak_index=self._current_streak_index,
         )
 
-
     def on_show_answer(self):
         """Can be triggered by edit field in review add-on"""
         return self
 
-
-    def _advancement_requirements_met(
-        self, card_did_pass, question_answered_at
-    ):
+    def _advancement_requirements_met(self, card_did_pass, question_answered_at):
         requirements_for_current_state_met = self.current_medal_state.requirements_met(
             question_shown_at=self._question_shown_at,
             question_answered_at=question_answered_at,
@@ -324,7 +318,9 @@ class AnswerShownState:
             states=self.states,
             question_shown_at=datetime.now(),
             interval_s=self._interval_s,
-            current_streak_index=self.current_medal_state.next_streak_index(self._current_streak_index),
+            current_streak_index=self.current_medal_state.next_streak_index(
+                self._current_streak_index
+            ),
         )
 
     def _reset_state_machine(self, new_index=0):
@@ -365,13 +361,29 @@ class NewAchievement:
         return self.medal.medal_image
 
 
+HALO_KILLSTREAK_STATES = [
+    KillingSpreeNoMedalState(rank=0),
+    KillingSpreeNoMedalState(rank=1),
+    KillingSpreeNoMedalState(rank=2),
+    EndState(
+        medal_state=KillingSpreeMedalState(
+            id_="cave_killstreak_1",
+            medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
+            name="Bottle o' Enchanting",
+            game_id="halo_3",
+            rank=3,
+        ),
+        index_to_return_to=1,
+    ),
+]
+
 HALO_MULTIKILL_STATES = [
     MultikillStartingState(),
     MultikillNoMedalState(),
     MultikillMedalState(
         id_="乾燥した昆布",
-        medal_image=image_path("Dried_Kelp.webp"),
-        name="Dried Kelp",
+        medal_image=image_path("Cobbled_Deepslate.webp"),
+        name="Cobbled Deepslate",
         game_id="halo_3",
         rank=2,
     ),
@@ -391,7 +403,7 @@ HALO_MULTIKILL_STATES = [
     ),
     MultikillMedalState(
         id_="レッドストーンダスト",
-        medal_image=image_path("Redstone_Dust.webp.png"),
+        medal_image=image_path("Redstone_Dust.png"),
         name="Redstone Dust",
         game_id="halo_3",
         rank=5,
@@ -415,7 +427,7 @@ HALO_MULTIKILL_STATES = [
     EndState(
         medal_state=MultikillMedalState(
             id_="エメラルド",
-            medal_image=image_path("minecraft-block-of-emerald-and-emerald-cursor-pack.png"),
+            medal_image=image_path("Emerald.png"),
             name="Emerald",
             game_id="halo_3",
             rank=10,
@@ -433,9 +445,27 @@ HALO_KILLING_SPREE_STATES = [
         game_id="halo_3",
         rank=1,
     ),
-    KillingSpreeNoMedalState(rank=2),
-    KillingSpreeNoMedalState(rank=3),
-    KillingSpreeNoMedalState(rank=4),
+    KillingSpreeMedalState(
+        id_="安山岩",
+        medal_image=image_path("Andesite.webp"),
+        name="Andesite",
+        game_id="halo_3",
+        rank=2,
+    ),
+    KillingSpreeMedalState(
+        id_="閃緑岩",
+        medal_image=image_path("Deorite.webp"),
+        name="Deorite",
+        game_id="halo_3",
+        rank=3,
+    ),
+    KillingSpreeMedalState(
+        id_="花崗岩",
+        medal_image=image_path("Granite.webp"),
+        name="Granite",
+        game_id="halo_3",
+        rank=4,
+    ),
     KillingSpreeMedalState(
         id_="矢",
         medal_image=image_path("Arrow.webp.png"),
@@ -443,13 +473,19 @@ HALO_KILLING_SPREE_STATES = [
         game_id="halo_3",
         rank=5,
     ),
-    KillingSpreeNoMedalState(rank=6),
+    KillingSpreeMedalState(
+        id_="金インゴット",
+        medal_image=image_path("Gold_ingot.webp.png"),
+        name="金インゴット",
+        game_id="halo_3",
+        rank=6,
+    ),
     KillingSpreeNoMedalState(rank=7),
     KillingSpreeNoMedalState(rank=8),
     KillingSpreeNoMedalState(rank=9),
     KillingSpreeMedalState(
         id_="金のリンゴ",
-        medal_image=image_path("Golden_Apple_JE2_BE2.webp.png"),
+        medal_image=image_path("Golden_Apple.png"),
         name="Golden Apple",
         game_id="halo_3",
         rank=10,
@@ -465,7 +501,7 @@ HALO_KILLING_SPREE_STATES = [
     KillingSpreeNoMedalState(rank=19),
     KillingSpreeMedalState(
         id_="治癒のポーションII",
-        medal_image=image_path("Splash_Potion_of_Healing_JE2_BE2.webp.png"),
+        medal_image=image_path("Splash_Potion_of_Healing.png"),
         name="Splash Potion of Healing II",
         game_id="halo_3",
         rank=20,
@@ -499,15 +535,41 @@ HALO_KILLING_SPREE_STATES = [
     KillingSpreeNoMedalState(rank=47),
     KillingSpreeNoMedalState(rank=48),
     KillingSpreeNoMedalState(rank=49),
+    KillingSpreeMedalState(
+        id_="エンチャントされた金のリンゴ",
+        medal_image=image_path("Enchanted_Golden_Apple.gif"),
+        name="Enchanted Golden Apple",
+        game_id="halo_3",
+        rank=50,
+    ),
+    KillingSpreeNoMedalState(rank=51),
+    KillingSpreeNoMedalState(rank=52),
+    KillingSpreeNoMedalState(rank=53),
+    KillingSpreeNoMedalState(rank=54),
+    KillingSpreeNoMedalState(rank=55),
+    KillingSpreeNoMedalState(rank=56),
+    KillingSpreeNoMedalState(rank=57),
+    KillingSpreeNoMedalState(rank=58),
+    KillingSpreeNoMedalState(rank=59),
+    KillingSpreeNoMedalState(rank=60),
+    KillingSpreeNoMedalState(rank=61),
+    KillingSpreeNoMedalState(rank=62),
+    KillingSpreeNoMedalState(rank=63),
+    KillingSpreeNoMedalState(rank=64),
+    KillingSpreeNoMedalState(rank=65),
+    KillingSpreeNoMedalState(rank=66),
+    KillingSpreeNoMedalState(rank=67),
+    KillingSpreeNoMedalState(rank=68),
+    KillingSpreeNoMedalState(rank=69),
     EndState(
         medal_state=KillingSpreeMedalState(
-            id_="エンチャントされた金のリンゴ",
-            medal_image=image_path("Enchanted_Golden_Apple_JE2_BE2.gif"),
-            name="Enchanted Golden Apple",
+            id_="ネザライトインゴット",
+            medal_image=image_path("Netherite_Ingot.webp"),
+            name="ネザライトインゴット",
             game_id="halo_3",
-            rank=50,
+            rank=70,
         ),
-        index_to_return_to=1
+        index_to_return_to=1,
     ),
 ]
 
@@ -519,13 +581,13 @@ MW2_KILLSTREAK_STATES = [
         name="Dried Kelp",
         game_id="mw2",
         rank=1,
-        ),
+    ),
     KillingSpreeMedalState(
         id_="砂",
         medal_image=image_path("mw2/Sand.webp.png"),
         name="Sand",
         game_id="mw2",
-        #call="UAV recon standing by",
+        # call="UAV recon standing by",
         rank=2,
     ),
     KillingSpreeMedalState(
@@ -533,7 +595,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Sandstone.webp.png"),
         name="Sandstone",
         game_id="mw2",
-        #call="UAV recon standing by",
+        # call="UAV recon standing by",
         rank=3,
     ),
     KillingSpreeMedalState(
@@ -541,7 +603,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Clay.png"),
         name="Clay",
         game_id="mw2",
-        #call="Care package waiting for your mark",
+        # call="Care package waiting for your mark",
         rank=4,
     ),
     KillingSpreeMedalState(
@@ -549,7 +611,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Cooked_Cod_JE4_BE3.webp.png"),
         name="Cooked Cod",
         game_id="mw2",
-        #call="Predator missile ready for launch",
+        # call="Predator missile ready for launch",
         rank=5,
     ),
     KillingSpreeMedalState(
@@ -557,7 +619,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Cooked_Salmon.webp.png"),
         name="Cooked Salmon",
         game_id="mw2",
-        #call="Airstrike standing by",
+        # call="Airstrike standing by",
         rank=6,
     ),
     KillingSpreeMedalState(
@@ -565,7 +627,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Glass.webp.png"),
         name="Glass",
         game_id="mw2",
-        #call="Harrier's waiting for your mark",
+        # call="Harrier's waiting for your mark",
         rank=7,
     ),
     KillingSpreeMedalState(
@@ -573,7 +635,7 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Prismarine_Shard.png"),
         name="Prismarine Shard",
         game_id="mw2",
-        call="プリズマリンブロックをクラフト可能",
+        # call="プリズマリンブロックをクラフト可能",
         rank=8,
     ),
     KillingSpreeMedalState(
@@ -581,10 +643,10 @@ MW2_KILLSTREAK_STATES = [
         medal_image=image_path("mw2/Prismarine_Crystal.png"),
         name="Prismarine Crystal",
         game_id="mw2",
-        call="シーランタンをクラフト可能",
+        # call="シーランタンをクラフト可能",
         rank=9,
     ),
-EndState(
+    EndState(
         medal_state=KillingSpreeMedalState(
             id_="TNTブロック",
             medal_image=image_path("mw2/TNT.webp.png"),
@@ -594,7 +656,7 @@ EndState(
         ),
         index_to_return_to=1,
     ),
-    ]
+]
 
 HALO_5_MULTIKILL_STATES = [
     MultikillStartingState(),
@@ -614,14 +676,14 @@ HALO_5_MULTIKILL_STATES = [
         rank=3,
     ),
     MultikillMedalState(
-        id_="オークの原木-1",
+        id_="オークの原木",
         medal_image=image_path("halo_5/Oak_Log.webp.png"),
         name="Oak Log",
         game_id="halo_5",
         rank=4,
     ),
     MultikillMedalState(
-        id_="白樺の原木-1",
+        id_="白樺の原木",
         medal_image=image_path("halo_5/Birch_Log.webp.png"),
         name="Birch Log",
         game_id="halo_5",
@@ -650,7 +712,9 @@ HALO_5_MULTIKILL_STATES = [
     ),
     MultikillMedalState(
         id_="ロケット花火",
-        medal_image=image_path("halo_5/minecraft-firework-rocket-and-firework-star-cursor.png"),
+        medal_image=image_path(
+            "halo_5/minecraft-firework-rocket-and-firework-star-cursor.png"
+        ),
         name="Firework rocket",
         game_id="halo_5",
         rank=9,
@@ -658,12 +722,12 @@ HALO_5_MULTIKILL_STATES = [
     EndState(
         medal_state=MultikillMedalState(
             id_="金のリンゴ-1",
-            medal_image=image_path("Golden_Apple_JE2_BE2.webp.png"),
+            medal_image=image_path("Golden_Apple.png"),
             name="Golden Apple",
             game_id="halo_5",
             rank=10,
         ),
-        index_to_return_to=2
+        index_to_return_to=2,
     ),
 ]
 
@@ -674,7 +738,8 @@ HALO_5_KILLING_SPREE_STATES = [
         medal_image=image_path("halo_5/Dirt.webp.png"),
         name="Dirt",
         game_id="halo_5",
-        rank=1),
+        rank=1,
+    ),
     KillingSpreeNoMedalState(rank=2),
     KillingSpreeNoMedalState(rank=3),
     KillingSpreeNoMedalState(rank=4),
@@ -729,7 +794,7 @@ HALO_5_KILLING_SPREE_STATES = [
             game_id="halo_5",
             rank=30,
         ),
-        index_to_return_to=1
+        index_to_return_to=1,
     ),
 ]
 
@@ -789,12 +854,12 @@ HALO_INFINITE_MULTIKILL_STATES = [
     EndState(
         medal_state=MultikillMedalState(
             id_="ハチミツ入りの瓶",
-            medal_image=image_path("halo_infinite/Honey_Bottle_JE1_BE2.webp.png"),
+            medal_image=image_path("halo_infinite/Honey_Bottle.png"),
             name="Honey Bottle",
             game_id="halo_infinite",
             rank=9,
         ),
-        index_to_return_to=2
+        index_to_return_to=2,
     ),
 ]
 
@@ -807,7 +872,7 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
         name="Sweet Berries",
         game_id="halo_infinite",
         rank=1,
-),
+    ),
     KillingSpreeNoMedalState(rank=2),
     KillingSpreeNoMedalState(rank=3),
     KillingSpreeNoMedalState(rank=4),
@@ -835,7 +900,7 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
     KillingSpreeNoMedalState(rank=14),
     KillingSpreeMedalState(
         id_="金のリンゴ-2",
-        medal_image=image_path("Golden_Apple_JE2_BE2.webp.png"),
+        medal_image=image_path("Golden_Apple.png"),
         name="Golden Apple",
         game_id="halo_infinite",
         rank=15,
@@ -847,12 +912,12 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
     EndState(
         medal_state=KillingSpreeMedalState(
             id_="エンチャントされた金のリンゴ-1",
-            medal_image=image_path("Enchanted_Golden_Apple_JE2_BE2.gif"),
+            medal_image=image_path("Enchanted_Golden_Apple.gif"),
             name="Enchanted Golden Apple",
             game_id="halo_infinite",
             rank=20,
         ),
-        index_to_return_to=11
+        index_to_return_to=11,
     ),
 ]
 
@@ -861,13 +926,13 @@ VANGUARD_MULTIKILL_STATES = [
     MultikillStartingState(),
     EndState(
         medal_state=MultikillMedalState(
-            id_="オークの原木",
+            id_="オークの原木-1",
             medal_image=image_path("halo_5/Oak_Log.webp.png"),
             name="Oak Log",
             game_id="vanguard",
             rank=1,
         ),
-        index_to_return_to=1
+        index_to_return_to=1,
     ),
 ]
 
@@ -875,7 +940,7 @@ VANGUARD_MULTIKILL_STATES = [
 VANGUARD_KILLING_SPREE_STATES = [
     KillingSpreeNoMedalState(rank=0),
     KillingSpreeMedalState(
-        id_="白樺の原木",
+        id_="白樺の原木-1",
         medal_image=image_path("vanguard/Birch_Log.webp.png"),
         name="Birch Log",
         game_id="vanguard",
@@ -945,7 +1010,7 @@ VANGUARD_KILLING_SPREE_STATES = [
             game_id="vanguard",
             rank=10,
         ),
-        index_to_return_to=1
+        index_to_return_to=1,
     ),
 ]
 
@@ -974,248 +1039,210 @@ VANGUARD_KILLSTREAK_STATES = [
 ]
 
 
-MWR_MULTIKILL_STATES = [
+trap_tower_layer1 = [
     MultikillStartingState(),
-    MultikillNoMedalState(rank=1),
     MultikillMedalState(
-        id_="mwr_double_kill",
-        medal_image=image_path("mwr/double-kill.png"),
-        name="Double Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_1",
+        medal_image=image_path("trap_tower/Rotten_Flesh.webp"),
+        name="Rotten Flesh",
+        game_id="trap_tower",
+        rank=1,
+    ),
+    MultikillMedalState(
+        id_="trap_tower_layer1_2",
+        medal_image=image_path("Arrow.webp.png"),
+        name="Arrow",
+        game_id="trap_tower",
         rank=2,
     ),
     MultikillMedalState(
-        id_="mwr_triple_kill",
-        medal_image=image_path("mwr/triple-kill.png"),
-        name="Triple Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_3",
+        medal_image=image_path("trap_tower/Bone.webp"),
+        name="Bone",
+        game_id="trap_tower",
         rank=3,
     ),
     MultikillMedalState(
-        id_="mwr_fury_kill",
-        medal_image=image_path("mwr/fury-kill.png"),
-        name="Fury Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_4",
+        medal_image=image_path("trap_tower/String.webp"),
+        name="String",
+        game_id="trap_tower",
         rank=4,
     ),
     MultikillMedalState(
-        id_="mwr_frenzy_kill",
-        medal_image=image_path("mwr/frenzy-kill.png"),
-        name="Frenzy Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_5",
+        medal_image=image_path("trap_tower/Spider_Eye.webp"),
+        name="Spider Eye",
+        game_id="trap_tower",
         rank=5,
     ),
     MultikillMedalState(
-        id_="mwr_super_kill",
-        medal_image=image_path("mwr/super-kill.png"),
-        name="Super Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_6",
+        medal_image=image_path("trap_tower/Slimeball.webp"),
+        name="Slimeball",
+        game_id="trap_tower",
         rank=6,
     ),
     MultikillMedalState(
-        id_="mwr_mega_kill",
-        medal_image=image_path("mwr/mega-kill.png"),
-        name="Mega Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_7",
+        medal_image=image_path("trap_tower/Gold_Nugget.webp"),
+        name="Gold Nugget",
+        game_id="trap_tower",
         rank=7,
     ),
     MultikillMedalState(
-        id_="mwr_ultra_kill",
-        medal_image=image_path("mwr/ultra-kill.png"),
-        name="Ultra Kill",
-        game_id="mwr",
+        id_="trap_tower_layer1_8",
+        medal_image=image_path("trap_tower/Magma_Cream.webp"),
+        name="Magma Cream",
+        game_id="trap_tower",
         rank=8,
     ),
     MultikillMedalState(
-        id_="mwr_kill_chain",
-        medal_image=image_path("mwr/kill-chain.png"),
-        name="Kill Chain",
-        call="Kill Chain (shows every 5th earned)",
-        game_id="mwr",
+        id_="trap_tower_layer1_9",
+        medal_image=image_path("trap_tower/Blaze_Rod.webp"),
+        name="Blaze Rod",
+        game_id="trap_tower",
         rank=9,
-    ),
-    MultikillMedalState(
-        id_="mwr_kill_chain",
-        medal_image=image_path("mwr/kill-chain.png"),
-        name="Kill Chain",
-        call="Kill Chain (shows every 5th earned)",
-        game_id="mwr",
-        rank=10,
-    ),
-    MultikillMedalState(
-        id_="mwr_kill_chain",
-        medal_image=image_path("mwr/kill-chain.png"),
-        name="Kill Chain",
-        call="Kill Chain (shows every 5th earned)",
-        game_id="mwr",
-        rank=11,
-    ),
-    MultikillMedalState(
-        id_="mwr_kill_chain",
-        medal_image=image_path("mwr/kill-chain.png"),
-        name="Kill Chain",
-        call="Kill Chain (shows every 5th earned)",
-        game_id="mwr",
-        rank=12,
     ),
     EndState(
         MultikillMedalState(
-            id_="mwr_kill_chain",
-            medal_image=image_path("mwr/kill-chain.png"),
-            name="Kill Chain",
-            call="Kill Chain (shows every 5th earned)",
-            game_id="mwr",
-            rank=13,
-        ),
-        index_to_return_to=9
-    ),
-]
-
-
-MWR_KILLING_SPREE_STATES = [
-    KillingSpreeNoMedalState(rank=0),
-    KillingSpreeNoMedalState(rank=1),
-    KillingSpreeNoMedalState(rank=2),
-    KillingSpreeNoMedalState(rank=3),
-    KillingSpreeNoMedalState(rank=4),
-    KillingSpreeMedalState(
-        id_="mwr_bloodthirsty",
-        medal_image=image_path("mwr/bloodthirsty.png"),
-        name="Bloodthirsty",
-        game_id="mwr",
-        rank=5,
-    ),
-    KillingSpreeNoMedalState(rank=6),
-    KillingSpreeNoMedalState(rank=7),
-    KillingSpreeNoMedalState(rank=8),
-    KillingSpreeNoMedalState(rank=9),
-    KillingSpreeMedalState(
-        id_="mwr_merciless",
-        medal_image=image_path("mwr/merciless.png"),
-        name="Merciless",
-        game_id="mwr",
-        rank=10,
-    ),
-    KillingSpreeNoMedalState(rank=11),
-    KillingSpreeNoMedalState(rank=12),
-    KillingSpreeNoMedalState(rank=13),
-    KillingSpreeNoMedalState(rank=14),
-    KillingSpreeMedalState(
-        id_="mwr_ruthless",
-        medal_image=image_path("mwr/ruthless.png"),
-        name="Ruthless",
-        game_id="mwr",
-        rank=15,
-    ),
-    KillingSpreeNoMedalState(rank=16),
-    KillingSpreeNoMedalState(rank=17),
-    KillingSpreeNoMedalState(rank=18),
-    KillingSpreeNoMedalState(rank=19),
-    KillingSpreeMedalState(
-        id_="mwr_relentless",
-        medal_image=image_path("mwr/relentless.png"),
-        name="Relentless",
-        game_id="mwr",
-        rank=20,
-    ),
-    KillingSpreeNoMedalState(rank=21),
-    KillingSpreeNoMedalState(rank=22),
-    KillingSpreeNoMedalState(rank=23),
-    KillingSpreeNoMedalState(rank=24),
-    KillingSpreeMedalState(
-        id_="mwr_brutal",
-        medal_image=image_path("mwr/brutal.png"),
-        name="Brutal",
-        game_id="mwr",
-        rank=25,
-    ),
-    KillingSpreeNoMedalState(rank=26),
-    KillingSpreeNoMedalState(rank=27),
-    KillingSpreeNoMedalState(rank=28),
-    KillingSpreeNoMedalState(rank=29),
-    KillingSpreeMedalState(
-        id_="mwr_vicious",
-        medal_image=image_path("mwr/vicious.png"),
-        name="Vicious",
-        game_id="mwr",
-        rank=30,
-    ),
-    KillingSpreeMedalState(
-        id_="mwr_unstoppable",
-        medal_image=image_path("mwr/unstoppable.png"),
-        name="Unstoppable",
-        call="Unstoppable (shows every 5th earned)",
-        game_id="mwr",
-        rank=31,
-    ),
-    KillingSpreeMedalState(
-        id_="mwr_unstoppable",
-        medal_image=image_path("mwr/unstoppable.png"),
-        name="Unstoppable",
-        call="Unstoppable (shows every 5th earned)",
-        game_id="mwr",
-        rank=32,
-    ),
-    KillingSpreeMedalState(
-        id_="mwr_unstoppable",
-        medal_image=image_path("mwr/unstoppable.png"),
-        name="Unstoppable",
-        call="Unstoppable (shows every 5th earned)",
-        game_id="mwr",
-        rank=33,
-    ),
-    KillingSpreeMedalState(
-        id_="mwr_unstoppable",
-        medal_image=image_path("mwr/unstoppable.png"),
-        name="Unstoppable",
-        call="Unstoppable (shows every 5th earned)",
-        game_id="mwr",
-        rank=34,
-    ),
-    EndState(
-        KillingSpreeMedalState(
-            id_="mwr_unstoppable",
-            medal_image=image_path("mwr/unstoppable.png"),
-            name="Unstoppable",
-            call="Unstoppable (shows every 5th earned)",
-            game_id="mwr",
-            rank=35,
-        ),
-        index_to_return_to=31,
-    )
-]
-
-
-MWR_KILLSTREAK_STATES = [
-    KillingSpreeNoMedalState(rank=0),
-    KillingSpreeNoMedalState(rank=1),
-    KillingSpreeNoMedalState(rank=2),
-    KillingSpreeMedalState(
-        id_="mwr_radar",
-        medal_image=image_path("mwr/radar.png"),
-        name="Radar",
-        game_id="mwr",
-        rank=3,
-    ),
-    KillingSpreeNoMedalState(rank=4),
-    KillingSpreeMedalState(
-        id_="mwr_airstrike",
-        medal_image=image_path("mwr/airstrike.png"),
-        name="Airstrike",
-        game_id="mwr",
-        rank=5,
-    ),
-    KillingSpreeNoMedalState(rank=6),
-    EndState(
-        KillingSpreeMedalState(
-            id_="mwr_helicopter",
-            medal_image=image_path("mwr/helicopter.png"),
-            name="Helicopter",
-            game_id="mwr",
-            rank=7,
+            id_="trap_tower_layer1_10",
+            medal_image=image_path("Emerald.png"),
+            name="Emerald",
+            game_id="trap_tower",
+            rank=10,
         ),
         index_to_return_to=1,
     ),
+]
+
+
+# trap_tower_layer_2 = [
+#     KillingSpreeNoMedalState(rank=0),
+#     KillingSpreeNoMedalState(rank=1),
+#     KillingSpreeNoMedalState(rank=2),
+#     KillingSpreeNoMedalState(rank=3),
+#     KillingSpreeNoMedalState(rank=4),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_layer3_0",
+#         medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
+#         name="エンチャントの瓶",
+#         call="エンチャントの瓶 (5コンボ！)",
+#         game_id="trap_tower",
+#         rank=5,
+#     ),
+#     KillingSpreeNoMedalState(rank=6),
+#     KillingSpreeNoMedalState(rank=7),
+#     KillingSpreeNoMedalState(rank=8),
+#     KillingSpreeNoMedalState(rank=9),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_merciless",
+#         medal_image=image_path("trap_tower/merciless.png"),
+#         name="Merciless",
+#         game_id="trap_tower",
+#         rank=10,
+#     ),
+#     KillingSpreeNoMedalState(rank=11),
+#     KillingSpreeNoMedalState(rank=12),
+#     KillingSpreeNoMedalState(rank=13),
+#     KillingSpreeNoMedalState(rank=14),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_ruthless",
+#         medal_image=image_path("trap_tower/ruthless.png"),
+#         name="Ruthless",
+#         game_id="trap_tower",
+#         rank=15,
+#     ),
+#     KillingSpreeNoMedalState(rank=16),
+#     KillingSpreeNoMedalState(rank=17),
+#     KillingSpreeNoMedalState(rank=18),
+#     KillingSpreeNoMedalState(rank=19),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_relentless",
+#         medal_image=image_path("trap_tower/relentless.png"),
+#         name="Relentless",
+#         game_id="trap_tower",
+#         rank=20,
+#     ),
+#     KillingSpreeNoMedalState(rank=21),
+#     KillingSpreeNoMedalState(rank=22),
+#     KillingSpreeNoMedalState(rank=23),
+#     KillingSpreeNoMedalState(rank=24),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_brutal",
+#         medal_image=image_path("trap_tower/brutal.png"),
+#         name="Brutal",
+#         game_id="trap_tower",
+#         rank=25,
+#     ),
+#     KillingSpreeNoMedalState(rank=26),
+#     KillingSpreeNoMedalState(rank=27),
+#     KillingSpreeNoMedalState(rank=28),
+#     KillingSpreeNoMedalState(rank=29),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_vicious",
+#         medal_image=image_path("trap_tower/vicious.png"),
+#         name="Vicious",
+#         game_id="trap_tower",
+#         rank=30,
+#     ),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_unstoppable",
+#         medal_image=image_path("trap_tower/unstoppable.png"),
+#         name="Unstoppable",
+#         call="Unstoppable (shows every 5th earned)",
+#         game_id="trap_tower",
+#         rank=31,
+#     ),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_unstoppable",
+#         medal_image=image_path("trap_tower/unstoppable.png"),
+#         name="Unstoppable",
+#         call="Unstoppable (shows every 5th earned)",
+#         game_id="trap_tower",
+#         rank=32,
+#     ),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_unstoppable",
+#         medal_image=image_path("trap_tower/unstoppable.png"),
+#         name="Unstoppable",
+#         call="Unstoppable (shows every 5th earned)",
+#         game_id="trap_tower",
+#         rank=33,
+#     ),
+#     KillingSpreeMedalState(
+#         id_="trap_tower_unstoppable",
+#         medal_image=image_path("trap_tower/unstoppable.png"),
+#         name="Unstoppable",
+#         call="Unstoppable (shows every 5th earned)",
+#         game_id="trap_tower",
+#         rank=34,
+#     ),
+#     EndState(
+#         KillingSpreeMedalState(
+#             id_="trap_tower_unstoppable",
+#             medal_image=image_path("trap_tower/unstoppable.png"),
+#             name="Unstoppable",
+#             call="Unstoppable (shows every 5th earned)",
+#             game_id="trap_tower",
+#             rank=35,
+#         ),
+#         index_to_return_to=31,
+#     ),
+# ]
+
+
+trap_tower_layer3 = [
+    EndState(
+        KillingSpreeMedalState(
+            id_="trap_tower_layer3_0",
+            medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
+            name="Bottle o' Enchanting",
+            game_id="trap_tower",
+            rank=0,
+        ),
+        index_to_return_to=0,
+    )
 ]
 
 
@@ -1224,6 +1251,7 @@ def get_all_displayable_medals():
     all_medals = itertools.chain(
         HALO_MULTIKILL_STATES,
         HALO_KILLING_SPREE_STATES,
+        HALO_KILLSTREAK_STATES,
         MW2_KILLSTREAK_STATES,
         HALO_5_MULTIKILL_STATES,
         HALO_5_KILLING_SPREE_STATES,
@@ -1232,9 +1260,9 @@ def get_all_displayable_medals():
         VANGUARD_MULTIKILL_STATES,
         VANGUARD_KILLING_SPREE_STATES,
         VANGUARD_KILLSTREAK_STATES,
-        MWR_MULTIKILL_STATES,
-        MWR_KILLING_SPREE_STATES,
-        MWR_KILLSTREAK_STATES,
+        trap_tower_layer1,
+        # trap_tower_layer_2,
+        trap_tower_layer3,
     )
     return list(filter(lambda m: m.is_displayable_medal, all_medals))
 
@@ -1249,6 +1277,10 @@ def get_stores_by_game_id(config):
                 ),
                 InitialStreakState(
                     states=HALO_KILLING_SPREE_STATES,
+                    interval_s=config["killing_spree_interval_s"],
+                ),
+                InitialStreakState(
+                    states=HALO_KILLSTREAK_STATES,
                     interval_s=config["killing_spree_interval_s"],
                 ),
             ]
@@ -1277,7 +1309,7 @@ def get_stores_by_game_id(config):
             state_machines=[
                 InitialStreakState(
                     states=HALO_INFINITE_MULTIKILL_STATES,
-                    interval_s=config["killing_spree_interval_s"]
+                    interval_s=config["killing_spree_interval_s"],
                 ),
                 InitialStreakState(
                     states=HALO_INFINITE_KILLING_SPREE_STATES,
@@ -1289,7 +1321,7 @@ def get_stores_by_game_id(config):
             state_machines=[
                 InitialStreakState(
                     states=VANGUARD_MULTIKILL_STATES,
-                    interval_s=config["killing_spree_interval_s"]
+                    interval_s=config["killing_spree_interval_s"],
                 ),
                 InitialStreakState(
                     states=VANGUARD_KILLING_SPREE_STATES,
@@ -1301,22 +1333,22 @@ def get_stores_by_game_id(config):
                 ),
             ]
         ),
-        mwr=Store(
+        trap_tower=Store(
             state_machines=[
                 InitialStreakState(
-                    states=MWR_MULTIKILL_STATES,
-                    interval_s=config["killing_spree_interval_s"]
-                ),
-                InitialStreakState(
-                    states=MWR_KILLING_SPREE_STATES,
+                    states=trap_tower_layer1,
                     interval_s=config["killing_spree_interval_s"],
                 ),
+                # InitialStreakState(
+                #     states=trap_tower_layer_2,
+                #     interval_s=config["killing_spree_interval_s"],
+                # ),
                 InitialStreakState(
-                    states=MWR_KILLSTREAK_STATES,
+                    states=trap_tower_layer3,
                     interval_s=config["killing_spree_interval_s"],
                 ),
             ]
-        )
+        ),
     )
 
 
