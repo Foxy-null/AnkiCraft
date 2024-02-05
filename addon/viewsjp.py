@@ -9,6 +9,7 @@ from .toolz import unique, join, groupby
 from .streaksjp import get_all_displayable_medals, all_game_ids
 from .config import local_conf
 
+
 def MedalsOverviewHTML(achievements, header_text, current_game_id):
     return (
         MedalsOverview(
@@ -38,7 +39,7 @@ def TodaysMedalsForDeckJS(achievements, deck, current_game_id):
     return AppendingInjector(
         html=MedalsOverview(
             medal_types=medal_types(achievements),
-            header_text=f'「{deck.name}」内で獲得した未回収のアイテム:',
+            header_text=f"「{deck.name}」内で獲得した未回収のアイテム:",
             current_game_id=current_game_id,
         )
     )
@@ -103,25 +104,30 @@ class MedalType:
 
 _templates_dir = Path(__file__).parent / "templates"
 
+
 def MedalsOverview(
     medal_types,
     current_game_id,
     header_text="このセッションで獲得したアイテム:",
 ):
     if local_conf["FontRange"] == "disabled":
-        with open(_templates_dir / "medals_overview-jp.html", "r", encoding='utf-8') as f:
+        with open(
+            _templates_dir / "medals_overview-jp.html", "r", encoding="utf-8"
+        ) as f:
             template = Template(f.read())
     elif local_conf["FontRange"] == "all":
-        with open(_templates_dir / "medals_overview-jp_all.html", "r", encoding='utf-8') as f:
+        with open(
+            _templates_dir / "medals_overview-jp_all.html", "r", encoding="utf-8"
+        ) as f:
             template = Template(f.read())
     else:
-        with open(_templates_dir / "medals_overview-jp_limit.html", "r", encoding='utf-8') as f:
+        with open(
+            _templates_dir / "medals_overview-jp_limit.html", "r", encoding="utf-8"
+        ) as f:
             template = Template(f.read())
 
     return template.render(
-        medal_types_by_game_id=medal_types_by_game_id(
-            medal_types, all_game_ids
-        ),
+        medal_types_by_game_id=medal_types_by_game_id(medal_types, all_game_ids),
         header_text=header_text,
         game_names_by_id=dict(
             halo_3="洞窟",
@@ -129,7 +135,7 @@ def MedalsOverview(
             halo_5="草原バイオーム",
             halo_infinite="食料畑",
             vanguard="森林バイオーム",
-            mwr="未設定のバイオーム",
+            trap_tower="トラップタワー",
         ),
         selected_game_id=current_game_id,
     )

@@ -71,12 +71,12 @@ def connect_menu(main_window, profile_controller, network_thread):
         )
     )
 
-    mwr_action = game_menu.addAction("undefined")
-    mwr_action.setCheckable(True)
-    mwr_action.triggered.connect(
+    trap_tower_action = game_menu.addAction("Trap Tower")
+    trap_tower_action.setCheckable(True)
+    trap_tower_action.triggered.connect(
         partial(
             set_current_game_id,
-            game_id="mwr",
+            game_id="trap_tower",
             get_settings_repo=profile_controller.get_settings_repo,
             on_game_changed=profile_controller.change_game,
         )
@@ -93,7 +93,7 @@ def connect_menu(main_window, profile_controller, network_thread):
                 halo_5=halo_5_action,
                 halo_infinite=halo_infinite_action,
                 vanguard=vanguard_action,
-                mwr=mwr_action,
+                trap_tower=trap_tower_action,
             ),
             load_current_game_id=partial(
                 load_current_game_id,
@@ -138,5 +138,3 @@ def check_correct_game_in_menu(menu_actions_by_game_id, load_current_game_id):
 
 def set_check_for_auto_switch_game(action, load_auto_switch_game_status):
     action.setChecked(load_auto_switch_game_status())
-
-

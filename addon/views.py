@@ -9,6 +9,7 @@ from .toolz import unique, join, groupby
 from .streaks import get_all_displayable_medals, all_game_ids
 from .config import local_conf
 
+
 def MedalsOverviewHTML(achievements, header_text, current_game_id):
     return (
         MedalsOverview(
@@ -18,6 +19,7 @@ def MedalsOverviewHTML(achievements, header_text, current_game_id):
         )
         + MedalsOverviewScript()
     )
+
 
 def MedalsOverviewScript():
     return f"<script>{js_content('medals_overview.js')}</script>"
@@ -37,7 +39,7 @@ def TodaysMedalsForDeckJS(achievements, deck, current_game_id):
     return AppendingInjector(
         html=MedalsOverview(
             medal_types=medal_types(achievements),
-            header_text=f'All unclaimed items you collected in: {deck.name}',
+            header_text=f"All unclaimed items you collected in: {deck.name}",
             current_game_id=current_game_id,
         )
     )
@@ -102,25 +104,28 @@ class MedalType:
 
 _templates_dir = Path(__file__).parent / "templates"
 
+
 def MedalsOverview(
     medal_types,
     current_game_id,
     header_text="Items collected in this deck:",
 ):
     if local_conf["FontRange"] == "disabled":
-        with open(_templates_dir / "medals_overview.html", "r", encoding='utf-8') as f:
+        with open(_templates_dir / "medals_overview.html", "r", encoding="utf-8") as f:
             template = Template(f.read())
     elif local_conf["FontRange"] == "all":
-        with open(_templates_dir / "medals_overview_all.html", "r", encoding='utf-8') as f:
+        with open(
+            _templates_dir / "medals_overview_all.html", "r", encoding="utf-8"
+        ) as f:
             template = Template(f.read())
     else:
-        with open(_templates_dir / "medals_overview_limit.html", "r", encoding='utf-8') as f:
+        with open(
+            _templates_dir / "medals_overview_limit.html", "r", encoding="utf-8"
+        ) as f:
             template = Template(f.read())
 
     return template.render(
-        medal_types_by_game_id=medal_types_by_game_id(
-            medal_types, all_game_ids
-        ),
+        medal_types_by_game_id=medal_types_by_game_id(medal_types, all_game_ids),
         header_text=header_text,
         game_names_by_id=dict(
             halo_3="Cave",
@@ -128,7 +133,7 @@ def MedalsOverview(
             halo_5="Overworld",
             halo_infinite="Farm",
             vanguard="Forest",
-            mwr="undefined",
+            trap_tower="Trap Tower",
         ),
         selected_game_id=current_game_id,
     )
