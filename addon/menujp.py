@@ -14,7 +14,7 @@ from . import profile_settings, networking
 def connect_menu(main_window, profile_controller, network_thread):
     # probably overdoing it with partial functions here... but none of these
     # need to be classes honestly
-    top_menu = QMenu("&AnkiCraft", main_window)
+    top_menu = QMenu("Anki&Craft", main_window)
     game_menu = QMenu("バイオームを選ぶ", main_window)
 
     halo_3_action = game_menu.addAction("洞窟")
