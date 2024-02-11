@@ -6,7 +6,7 @@ import base64
 
 from ._vendor.jinja2 import Template
 from .toolz import unique, join, groupby
-from .streaksjp import get_all_displayable_medals, all_game_ids
+from .streaks import get_all_displayable_medals, all_game_ids
 from .config import local_conf
 
 

@@ -9,9 +9,11 @@ from datetime import datetime, timedelta
 from functools import lru_cache
 import itertools
 from os.path import join, dirname
+import glob, random
 
 from . import addons
 from ._vendor import attr
+from .config import local_conf
 
 DEFAULT_GAME_ID = "halo_3"
 all_game_ids = ["halo_3", "mw2", "halo_5", "halo_infinite", "vanguard"]
@@ -68,16 +70,26 @@ class MultikillMedalState(MultikillMixin):
 
     id_ = attr.ib()
     name = attr.ib()
+    name_jp = attr.ib()
     medal_image = attr.ib()
+    medal_sound = attr.ib()
     rank = attr.ib()
     game_id = attr.ib()
     _call = attr.ib(default=None)
     is_earnable_medal = attr.ib(default=True)
     is_displayable_medal = attr.ib(default=True)
 
-    @property
-    def call(self):
-        return self._call if self._call else self.name
+    if local_conf["language"] == "ja":
+
+        @property
+        def call(self):
+            return self._call if self._call else self.name_jp
+
+    else:
+
+        @property
+        def call(self):
+            return self._call if self._call else self.name
 
     def next_streak_index(self, current_streak_index):
         return current_streak_index + 1
@@ -110,16 +122,26 @@ class KillingSpreeNoMedalState(KillingSpreeMixin):
 class KillingSpreeMedalState(KillingSpreeMixin):
     id_ = attr.ib()
     name = attr.ib()
+    name_jp = attr.ib()
     medal_image = attr.ib()
+    medal_sound = attr.ib()
     rank = attr.ib()
     game_id = attr.ib()
     _call = attr.ib(default=None)
     is_displayable_medal = attr.ib(default=True)
     is_earnable_medal = attr.ib(default=True)
 
-    @property
-    def call(self):
-        return self._call if self._call else self.name
+    if local_conf["language"] == "ja":
+
+        @property
+        def call(self):
+            return self._call if self._call else self.name_jp
+
+    else:
+
+        @property
+        def call(self):
+            return self._call if self._call else self.name
 
     def next_streak_index(self, current_streak_index):
         return current_streak_index + 1
@@ -337,10 +359,16 @@ class AnswerShownState:
 
 
 images_dir = join(dirname(__file__), "images")
+sfx_dir = join(dirname(__file__), "sounds")
 
 
 def image_path(filename):
     return join(images_dir, filename)
+
+
+def sound_path(filename):
+    random_sound = join(sfx_dir, filename)
+    return random.choice(glob.glob(random_sound + "/*"))
 
 
 @attr.s(frozen=True)
@@ -352,6 +380,12 @@ class NewAchievement:
     def medal_id(self):
         return self.medal.id_
 
+    if local_conf["language"] == "ja":
+
+        @property
+        def medal_name(self):
+            return self.medal.name_jp
+
     @property
     def medal_name(self):
         return self.medal.name
@@ -359,6 +393,10 @@ class NewAchievement:
     @property
     def medal_img_src(self):
         return self.medal.medal_image
+
+    @property
+    def medal_sound_src(self):
+        return self.medal.medal_sound
 
 
 HALO_KILLSTREAK_STATES = [
@@ -369,7 +407,9 @@ HALO_KILLSTREAK_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="cave_killstreak_1",
             medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
-            name="Bottle o' Enchanting",
+            medal_sound=sound_path("orb"),
+            name="Bottle o' Enchant ing",
+            name_jp="エンチャントの瓶",
             game_id="halo_3",
             rank=3,
         ),
@@ -383,42 +423,54 @@ HALO_MULTIKILL_STATES = [
     MultikillMedalState(
         id_="乾燥した昆布",
         medal_image=image_path("Cobbled_Deepslate.webp"),
+        medal_sound=sound_path("deepslate"),
         name="Cobbled Deepslate",
+        name_jp="深層岩の丸石",
         game_id="halo_3",
         rank=2,
     ),
     MultikillMedalState(
         id_="石炭",
         medal_image=image_path("Coal.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Coal",
+        name_jp="石炭",
         game_id="halo_3",
         rank=3,
     ),
     MultikillMedalState(
         id_="鉄インゴット",
         medal_image=image_path("Iron_ingot_0.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Iron Ingot",
+        name_jp="鉄インゴット",
         game_id="halo_3",
         rank=4,
     ),
     MultikillMedalState(
         id_="レッドストーンダスト",
         medal_image=image_path("Redstone_Dust.png"),
+        medal_sound=sound_path("stone"),
         name="Redstone Dust",
+        name_jp="レッドストーンダスト",
         game_id="halo_3",
         rank=5,
     ),
     MultikillMedalState(
         id_="ラピスラズリ",
         medal_image=image_path("Lapis_Lazuli.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Lapis Lazuli",
+        name_jp="ラピスラズリ",
         game_id="halo_3",
         rank=6,
     ),
     MultikillMedalState(
         id_="ダイヤモンド",
         medal_image=image_path("Diamond_0.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Diamond",
+        name_jp="ダイヤモンド",
         game_id="halo_3",
         rank=7,
     ),
@@ -428,7 +480,9 @@ HALO_MULTIKILL_STATES = [
         medal_state=MultikillMedalState(
             id_="エメラルド",
             medal_image=image_path("Emerald.png"),
+            medal_sound=sound_path("stone"),
             name="Emerald",
+            name_jp="エメラルド",
             game_id="halo_3",
             rank=10,
         ),
@@ -441,42 +495,54 @@ HALO_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="丸石",
         medal_image=image_path("Cobblestone.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Cobblestone",
+        name_jp="丸石",
         game_id="halo_3",
         rank=1,
     ),
     KillingSpreeMedalState(
         id_="安山岩",
         medal_image=image_path("Andesite.webp"),
+        medal_sound=sound_path("stone"),
         name="Andesite",
+        name_jp="安山岩",
         game_id="halo_3",
         rank=2,
     ),
     KillingSpreeMedalState(
         id_="閃緑岩",
         medal_image=image_path("Deorite.webp"),
+        medal_sound=sound_path("stone"),
         name="Deorite",
+        name_jp="閃緑岩",
         game_id="halo_3",
         rank=3,
     ),
     KillingSpreeMedalState(
         id_="花崗岩",
         medal_image=image_path("Granite.webp"),
+        medal_sound=sound_path("stone"),
         name="Granite",
+        name_jp="花崗岩",
         game_id="halo_3",
         rank=4,
     ),
     KillingSpreeMedalState(
         id_="矢",
         medal_image=image_path("Arrow.webp.png"),
+        medal_sound=sound_path("bow"),
         name="Arrow",
+        name_jp="矢",
         game_id="halo_3",
         rank=5,
     ),
     KillingSpreeMedalState(
         id_="金インゴット",
         medal_image=image_path("Gold_ingot.webp.png"),
-        name="金インゴット",
+        medal_sound=sound_path("stone"),
+        name="Gold ingot",
+        name_jp="金インゴット",
         game_id="halo_3",
         rank=6,
     ),
@@ -486,7 +552,9 @@ HALO_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="金のリンゴ",
         medal_image=image_path("Golden_Apple.png"),
+        medal_sound=sound_path("food"),
         name="Golden Apple",
+        name_jp="金のリンゴ",
         game_id="halo_3",
         rank=10,
     ),
@@ -502,7 +570,9 @@ HALO_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="治癒のポーションII",
         medal_image=image_path("Splash_Potion_of_Healing.png"),
+        medal_sound=sound_path("glass"),
         name="Splash Potion of Healing II",
+        name_jp="治癒のポーションII",
         game_id="halo_3",
         rank=20,
     ),
@@ -538,7 +608,9 @@ HALO_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="エンチャントされた金のリンゴ",
         medal_image=image_path("Enchanted_Golden_Apple.gif"),
+        medal_sound=sound_path("food"),
         name="Enchanted Golden Apple",
+        name_jp="エンチャントされた金のリンゴ",
         game_id="halo_3",
         rank=50,
     ),
@@ -565,7 +637,9 @@ HALO_KILLING_SPREE_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="ネザライトインゴット",
             medal_image=image_path("Netherite_Ingot.webp"),
-            name="ネザライトインゴット",
+            medal_sound=sound_path("smithing_table"),
+            name="Netherite Ingot",
+            name_jp="ネザライトインゴット",
             game_id="halo_3",
             rank=70,
         ),
@@ -578,14 +652,18 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="乾燥した昆布-1",
         medal_image=image_path("Dried_Kelp.webp"),
+        medal_sound=sound_path("food"),
         name="Dried Kelp",
+        name_jp="乾燥した昆布",
         game_id="mw2",
         rank=1,
     ),
     KillingSpreeMedalState(
         id_="砂",
         medal_image=image_path("mw2/Sand.webp.png"),
+        medal_sound=sound_path("sand"),
         name="Sand",
+        name_jp="砂",
         game_id="mw2",
         # call="UAV recon standing by",
         rank=2,
@@ -593,7 +671,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="砂岩",
         medal_image=image_path("mw2/Sandstone.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Sandstone",
+        name_jp="砂岩",
         game_id="mw2",
         # call="UAV recon standing by",
         rank=3,
@@ -601,7 +681,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="粘土",
         medal_image=image_path("mw2/Clay.png"),
+        medal_sound=sound_path("gravel"),
         name="Clay",
+        name_jp="粘土",
         game_id="mw2",
         # call="Care package waiting for your mark",
         rank=4,
@@ -609,7 +691,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="焼き鱈",
         medal_image=image_path("mw2/Cooked_Cod_JE4_BE3.webp.png"),
+        medal_sound=sound_path("fish"),
         name="Cooked Cod",
+        name_jp="焼き鱈",
         game_id="mw2",
         # call="Predator missile ready for launch",
         rank=5,
@@ -617,7 +701,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="焼き鮭",
         medal_image=image_path("mw2/Cooked_Salmon.webp.png"),
+        medal_sound=sound_path("fish"),
         name="Cooked Salmon",
+        name_jp="焼き鮭",
         game_id="mw2",
         # call="Airstrike standing by",
         rank=6,
@@ -625,7 +711,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="ガラスブロック",
         medal_image=image_path("mw2/Glass.webp.png"),
+        medal_sound=sound_path("glass"),
         name="Glass",
+        name_jp="ガラスブロック",
         game_id="mw2",
         # call="Harrier's waiting for your mark",
         rank=7,
@@ -633,7 +721,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="プリズマリンの欠片",
         medal_image=image_path("mw2/Prismarine_Shard.png"),
+        medal_sound=sound_path("stone"),
         name="Prismarine Shard",
+        name_jp="プリズマリンの欠片",
         game_id="mw2",
         # call="プリズマリンブロックをクラフト可能",
         rank=8,
@@ -641,7 +731,9 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="プリズマリンクリスタル",
         medal_image=image_path("mw2/Prismarine_Crystal.png"),
+        medal_sound=sound_path("glass"),
         name="Prismarine Crystal",
+        name_jp="プリズマリンクリスタル",
         game_id="mw2",
         # call="シーランタンをクラフト可能",
         rank=9,
@@ -650,7 +742,9 @@ MW2_KILLSTREAK_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="TNTブロック",
             medal_image=image_path("mw2/TNT.webp.png"),
+            medal_sound=sound_path("grass"),
             name="TNT",
+            name_jp="TNTブロック",
             game_id="mw2",
             rank=10,
         ),
@@ -664,49 +758,63 @@ HALO_5_MULTIKILL_STATES = [
     MultikillMedalState(
         id_="松明",
         medal_image=image_path("halo_5/Torch.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Torch",
+        name_jp="松明",
         game_id="halo_5",
         rank=2,
     ),
     MultikillMedalState(
         id_="オークの木材",
         medal_image=image_path("halo_5/Planks.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Oak Planks",
+        name_jp="オークの木材",
         game_id="halo_5",
         rank=3,
     ),
     MultikillMedalState(
         id_="オークの原木",
         medal_image=image_path("halo_5/Oak_Log.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Oak Log",
+        name_jp="オークの原木",
         game_id="halo_5",
         rank=4,
     ),
     MultikillMedalState(
         id_="白樺の原木",
         medal_image=image_path("halo_5/Birch_Log.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Birch Log",
+        name_jp="白樺の原木",
         game_id="halo_5",
         rank=5,
     ),
     MultikillMedalState(
         id_="ベイクドポテト",
         medal_image=image_path("halo_5/Baked_Potato_JE4_BE2.webp.png"),
+        medal_sound=sound_path("food"),
         name="Baked Potato",
+        name_jp="ベイクドポテト",
         game_id="halo_5",
         rank=6,
     ),
     MultikillMedalState(
         id_="ステーキ",
         medal_image=image_path("halo_5/SteakNew.webp.png"),
+        medal_sound=sound_path("food"),
         name="Steak",
+        name_jp="ステーキ",
         game_id="halo_5",
         rank=7,
     ),
     MultikillMedalState(
         id_="エンダーパール",
         medal_image=image_path("halo_5/Ender_Pearl.png"),
+        medal_sound=sound_path("throw"),
         name="Ender Pearl",
+        name_jp="エンダーパール",
         game_id="halo_5",
         rank=8,
     ),
@@ -715,7 +823,9 @@ HALO_5_MULTIKILL_STATES = [
         medal_image=image_path(
             "halo_5/minecraft-firework-rocket-and-firework-star-cursor.png"
         ),
+        medal_sound=sound_path("firework"),
         name="Firework rocket",
+        name_jp="ロケット花火",
         game_id="halo_5",
         rank=9,
     ),
@@ -723,7 +833,9 @@ HALO_5_MULTIKILL_STATES = [
         medal_state=MultikillMedalState(
             id_="金のリンゴ-1",
             medal_image=image_path("Golden_Apple.png"),
+            medal_sound=sound_path("food"),
             name="Golden Apple",
+            name_jp="金のリンゴ",
             game_id="halo_5",
             rank=10,
         ),
@@ -736,7 +848,9 @@ HALO_5_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="土",
         medal_image=image_path("halo_5/Dirt.webp.png"),
+        medal_sound=sound_path("dirt"),
         name="Dirt",
+        name_jp="土",
         game_id="halo_5",
         rank=1,
     ),
@@ -746,7 +860,9 @@ HALO_5_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="矢-1",
         medal_image=image_path("Arrow.webp.png"),
+        medal_sound=sound_path("bow"),
         name="Arrow",
+        name_jp="矢",
         game_id="halo_5",
         rank=5,
     ),
@@ -757,7 +873,9 @@ HALO_5_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="エンチャントの瓶",
         medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
+        medal_sound=sound_path("orb"),
         name="Bottle o' Enchanting",
+        name_jp="エンチャントの瓶",
         game_id="halo_5",
         rank=10,
     ),
@@ -768,7 +886,9 @@ HALO_5_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="鉄インゴット-1",
         medal_image=image_path("Iron_ingot_0.webp.png"),
+        medal_sound=sound_path("stone"),
         name="Iron Ingot",
+        name_jp="鉄インゴット",
         game_id="halo_5",
         rank=15,
     ),
@@ -790,7 +910,9 @@ HALO_5_KILLING_SPREE_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="不死のトーテム",
             medal_image=image_path("halo_5/Totem_of_Undying_JE2_BE2.webp.png"),
+            medal_sound=sound_path("item"),
             name="Totem of Undying",
+            name_jp="不死のトーテム",
             game_id="halo_5",
             rank=30,
         ),
@@ -805,49 +927,63 @@ HALO_INFINITE_MULTIKILL_STATES = [
     MultikillMedalState(
         id_="スイカの薄切り",
         medal_image=image_path("halo_infinite/melon-slice.png"),
+        medal_sound=sound_path("food"),
         name="Melon Slice",
+        name_jp="スイカの薄切り",
         game_id="halo_infinite",
         rank=2,
     ),
     MultikillMedalState(
         id_="リンゴ",
         medal_image=image_path("halo_infinite/apple.png"),
+        medal_sound=sound_path("food"),
         name="Apple",
+        name_jp="リンゴ",
         game_id="halo_infinite",
         rank=3,
     ),
     MultikillMedalState(
         id_="ニンジン",
         medal_image=image_path("halo_infinite/carrot.png"),
+        medal_sound=sound_path("food"),
         name="Carrot",
+        name_jp="ニンジン",
         game_id="halo_infinite",
         rank=4,
     ),
     MultikillMedalState(
         id_="パン",
         medal_image=image_path("halo_infinite/bread.png"),
+        medal_sound=sound_path("food"),
         name="Bread",
+        name_jp="パン",
         game_id="halo_infinite",
         rank=5,
     ),
     MultikillMedalState(
         id_="クッキー",
         medal_image=image_path("halo_infinite/cookie.png"),
+        medal_sound=sound_path("food"),
         name="Cookie",
+        name_jp="クッキー",
         game_id="halo_infinite",
         rank=6,
     ),
     MultikillMedalState(
         id_="パンプキンパイ",
         medal_image=image_path("halo_infinite/pumpkin_pie.png"),
+        medal_sound=sound_path("food"),
         name="Pumpkin Pie",
+        name_jp="パンプキンパイ",
         game_id="halo_infinite",
         rank=7,
     ),
     MultikillMedalState(
         id_="グロウベリー",
         medal_image=image_path("halo_infinite/glow_berries.png"),
+        medal_sound=sound_path("cavevines"),
         name="Glow Berries",
+        name_jp="グロウベリー",
         game_id="halo_infinite",
         rank=8,
     ),
@@ -855,7 +991,9 @@ HALO_INFINITE_MULTIKILL_STATES = [
         medal_state=MultikillMedalState(
             id_="ハチミツ入りの瓶",
             medal_image=image_path("halo_infinite/Honey_Bottle.png"),
+            medal_sound=sound_path("honeybottle"),
             name="Honey Bottle",
+            name_jp="ハチミツ入りの瓶",
             game_id="halo_infinite",
             rank=9,
         ),
@@ -869,7 +1007,9 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="スイートベリー",
         medal_image=image_path("halo_infinite/sweet-berries.png"),
+        medal_sound=sound_path("berrybush"),
         name="Sweet Berries",
+        name_jp="スイートベリー",
         game_id="halo_infinite",
         rank=1,
     ),
@@ -879,7 +1019,9 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="焼き鳥",
         medal_image=image_path("halo_infinite/Cooked_Chicken_JE3_BE3.webp.png"),
+        medal_sound=sound_path("food"),
         name="Cooked Chicken",
+        name_jp="焼き鳥",
         game_id="halo_infinite",
         rank=5,
     ),
@@ -890,7 +1032,9 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="焼き豚",
         medal_image=image_path("halo_infinite/Cooked_Porkchop_JE4_BE3.webp.png"),
+        medal_sound=sound_path("food"),
         name="Cooked Porkchop",
+        name_jp="焼き豚",
         game_id="halo_infinite",
         rank=10,
     ),
@@ -901,7 +1045,9 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="金のリンゴ-2",
         medal_image=image_path("Golden_Apple.png"),
+        medal_sound=sound_path("food"),
         name="Golden Apple",
+        name_jp="金のリンゴ",
         game_id="halo_infinite",
         rank=15,
     ),
@@ -913,7 +1059,9 @@ HALO_INFINITE_KILLING_SPREE_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="エンチャントされた金のリンゴ-1",
             medal_image=image_path("Enchanted_Golden_Apple.gif"),
+            medal_sound=sound_path("food"),
             name="Enchanted Golden Apple",
+            name_jp="エンチャントされた金のリンゴ",
             game_id="halo_infinite",
             rank=20,
         ),
@@ -928,7 +1076,9 @@ VANGUARD_MULTIKILL_STATES = [
         medal_state=MultikillMedalState(
             id_="オークの原木-1",
             medal_image=image_path("halo_5/Oak_Log.webp.png"),
+            medal_sound=sound_path("wood"),
             name="Oak Log",
+            name_jp="オークの原木",
             game_id="vanguard",
             rank=1,
         ),
@@ -942,63 +1092,81 @@ VANGUARD_KILLING_SPREE_STATES = [
     KillingSpreeMedalState(
         id_="白樺の原木-1",
         medal_image=image_path("vanguard/Birch_Log.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Birch Log",
+        name_jp="白樺の原木",
         game_id="vanguard",
         rank=1,
     ),
     KillingSpreeMedalState(
         id_="トウヒの原木",
         medal_image=image_path("vanguard/Spruce_Log.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Spruce Log",
+        name_jp="トウヒの原木",
         game_id="vanguard",
         rank=2,
     ),
     KillingSpreeMedalState(
         id_="ダークオークの原木",
         medal_image=image_path("vanguard/Dark_Oak_Log.png"),
+        medal_sound=sound_path("wood"),
         name="Dark Oak Log",
+        name_jp="ダークオークの原木",
         game_id="vanguard",
         rank=3,
     ),
     KillingSpreeMedalState(
         id_="ジャングルの原木",
         medal_image=image_path("vanguard/Jungle_Log.webp.png"),
+        medal_sound=sound_path("wood"),
         name="Jungle Log",
+        name_jp="ジャングルの原木",
         game_id="vanguard",
         rank=4,
     ),
     KillingSpreeMedalState(
         id_="アカシアの原木",
         medal_image=image_path("vanguard/Acacia_Log.png"),
+        medal_sound=sound_path("wood"),
         name="Acacia Log",
+        name_jp="アカシアの原木",
         game_id="vanguard",
         rank=5,
     ),
     KillingSpreeMedalState(
         id_="マングローブの原木",
         medal_image=image_path("vanguard/Mangrove_Log.png"),
+        medal_sound=sound_path("wood"),
         name="Mangrove Log",
+        name_jp="マングローブの原木",
         game_id="vanguard",
         rank=6,
     ),
     KillingSpreeMedalState(
         id_="サクラの原木",
         medal_image=image_path("vanguard/Cherry_Log.png"),
+        medal_sound=sound_path("wood"),
         name="Cherry Log",
+        name_jp="サクラの原木",
         game_id="vanguard",
         rank=7,
     ),
     KillingSpreeMedalState(
         id_="リンゴ-1",
         medal_image=image_path("halo_infinite/apple.png"),
+        medal_sound=sound_path("food"),
         name="Apple",
+        name_jp="リンゴ",
         game_id="vanguard",
         rank=8,
     ),
     KillingSpreeMedalState(
         id_="歪んだ原木",
         medal_image=image_path("vanguard/Warped_Stem.png"),
+        medal_sound=sound_path("wood"),
         name="Warped Stem",
+        name_jp="歪んだ原木",
         game_id="vanguard",
         rank=9,
     ),
@@ -1006,7 +1174,9 @@ VANGUARD_KILLING_SPREE_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="真紅の原木",
             medal_image=image_path("vanguard/Crimson_Stem.png"),
+            medal_sound=sound_path("wood"),
             name="Crimson Stem",
+            name_jp="真紅の原木",
             game_id="vanguard",
             rank=10,
         ),
@@ -1022,7 +1192,9 @@ VANGUARD_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="茶色のキノコ",
         medal_image=image_path("vanguard/BrownMushroomNew.webp.png"),
+        medal_sound=sound_path("grass"),
         name="Brown Mushroom",
+        name_jp="茶色のキノコ",
         game_id="vanguard",
         rank=3,
     ),
@@ -1030,7 +1202,9 @@ VANGUARD_KILLSTREAK_STATES = [
         medal_state=KillingSpreeMedalState(
             id_="赤色のキノコ",
             medal_image=image_path("vanguard/RedMushroomNew.webp.png"),
+            medal_sound=sound_path("grass"),
             name="Red Mushroom",
+            name_jp="赤色のキノコ",
             game_id="vanguard",
             rank=4,
         ),
@@ -1044,63 +1218,81 @@ trap_tower_layer1 = [
     MultikillMedalState(
         id_="trap_tower_layer1_1",
         medal_image=image_path("trap_tower/Rotten_Flesh.webp"),
+        medal_sound=sound_path("zombie"),
         name="Rotten Flesh",
+        name_jp="腐った肉",
         game_id="trap_tower",
         rank=1,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_2",
         medal_image=image_path("Arrow.webp.png"),
+        medal_sound=sound_path("item"),
         name="Arrow",
+        name_jp="矢",
         game_id="trap_tower",
         rank=2,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_3",
         medal_image=image_path("trap_tower/Bone.webp"),
+        medal_sound=sound_path("skeleton"),
         name="Bone",
+        name_jp="骨",
         game_id="trap_tower",
         rank=3,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_4",
         medal_image=image_path("trap_tower/String.webp"),
+        medal_sound=sound_path("spider"),
         name="String",
+        name_jp="糸",
         game_id="trap_tower",
         rank=4,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_5",
         medal_image=image_path("trap_tower/Spider_Eye.webp"),
+        medal_sound=sound_path("spider"),
         name="Spider Eye",
+        name_jp="クモの目",
         game_id="trap_tower",
         rank=5,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_6",
         medal_image=image_path("trap_tower/Slimeball.webp"),
+        medal_sound=sound_path("slime"),
         name="Slimeball",
+        name_jp="スライムボール",
         game_id="trap_tower",
         rank=6,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_7",
         medal_image=image_path("trap_tower/Gold_Nugget.webp"),
+        medal_sound=sound_path("item"),
         name="Gold Nugget",
+        name_jp="金塊",
         game_id="trap_tower",
         rank=7,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_8",
         medal_image=image_path("trap_tower/Magma_Cream.webp"),
+        medal_sound=sound_path("slime"),
         name="Magma Cream",
+        name_jp="マグマクリーム",
         game_id="trap_tower",
         rank=8,
     ),
     MultikillMedalState(
         id_="trap_tower_layer1_9",
         medal_image=image_path("trap_tower/Blaze_Rod.webp"),
+        medal_sound=sound_path("blaze"),
         name="Blaze Rod",
+        name_jp="ブレイズロッド",
         game_id="trap_tower",
         rank=9,
     ),
@@ -1108,7 +1300,9 @@ trap_tower_layer1 = [
         MultikillMedalState(
             id_="trap_tower_layer1_10",
             medal_image=image_path("Emerald.png"),
+            medal_sound=sound_path("item"),
             name="Emerald",
+            name_jp="エメラルド",
             game_id="trap_tower",
             rank=10,
         ),
@@ -1127,6 +1321,7 @@ trap_tower_layer1 = [
 #         id_="trap_tower_layer3_0",
 #         medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
 #         name="エンチャントの瓶",
+#         name_jp="エンチャントの瓶",
 #         call="エンチャントの瓶 (5コンボ！)",
 #         game_id="trap_tower",
 #         rank=5,
@@ -1139,6 +1334,7 @@ trap_tower_layer1 = [
 #         id_="trap_tower_merciless",
 #         medal_image=image_path("trap_tower/merciless.png"),
 #         name="Merciless",
+#         name_jp="?",
 #         game_id="trap_tower",
 #         rank=10,
 #     ),
@@ -1237,7 +1433,9 @@ trap_tower_layer3 = [
         KillingSpreeMedalState(
             id_="trap_tower_layer3_0",
             medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
+            medal_sound=sound_path("orb"),
             name="Bottle o' Enchanting",
+            name_jp="エンチャントの瓶",
             game_id="trap_tower",
             rank=0,
         ),

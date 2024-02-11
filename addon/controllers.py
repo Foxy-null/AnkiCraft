@@ -8,6 +8,7 @@ The goal of these controller classes is to have these be the only objects that
 hold state in the add-on. The other classes ideally should be immutable.
 This pattern has worked alright so far for this simple application.
 """
+
 from functools import wraps, partial
 
 from . import leaderboards
@@ -28,19 +29,11 @@ from .persistence import (
     AchievementsRepository,
     SettingsRepository,
 )
-if local_conf["language"] == "en":
-    from .streaks import (
-        did_card_pass,
-        NewAchievement,
-        get_next_game_id,
-    )
-elif local_conf["language"] == "ja":
-    from .streaksjp import (
-        did_card_pass,
-        NewAchievement,
-        get_next_game_id,
-    )
-
+from .streaks import (
+    did_card_pass,
+    NewAchievement,
+    get_next_game_id,
+)
 
 
 # Hack that we need because profileLoaded hook called after DeckBrowser shown

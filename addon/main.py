@@ -27,6 +27,7 @@ from aqt import mw, gui_hooks
 from aqt.qt import *
 from aqt.deckbrowser import DeckBrowser
 from aqt.reviewer import Reviewer
+from aqt.sound import play, clearAudioQueue
 from aqt.overview import Overview
 from anki.hooks import addHook, wrap
 from anki.stats import CollectionStats
@@ -39,31 +40,20 @@ from .controllers import (
 from .networking import process_queue, stop_thread_on_app_close
 from .persistence import day_start_time, min_datetime
 from ._vendor import attr
-if local_conf["language"] == "ja":
-    from .viewsjp import (
-        MedalsOverviewHTML,
-        TodaysMedalsJS,
-        TodaysMedalsForDeckJS,
-        js_content,
-    )
-    from .streaksjp import get_stores_by_game_id
-    TMJS = TodaysMedalsJS
-else:
-    from .views import (
-        MedalsOverviewHTML,
-        TodaysMedalsJS,
-        TodaysMedalsForDeckJS,
-        js_content,
-    )
-    from .streaks import get_stores_by_game_id
-    TMJS = TodaysMedalsJS
 
-if local_conf["language"] == "ja":
-        from .streaksjp import get_stores_by_game_id
-        from .menujp import connect_menu
-else:
-        from .streaks import get_stores_by_game_id
-        from .menu import connect_menu
+from .views import (
+    MedalsOverviewHTML,
+    TodaysMedalsJS,
+    TodaysMedalsForDeckJS,
+    js_content,
+)
+from .streaks import get_stores_by_game_id
+
+TMJS = TodaysMedalsJS
+
+from .streaks import get_stores_by_game_id
+from .menu import connect_menu
+
 
 def show_tool_tip_if_medals(displayable_medals):
     if len(displayable_medals) > 0:
@@ -97,7 +87,9 @@ mw.killstreaks_profile_controller = _profile_controller
 
 def main():
     _wrap_anki_objects(_profile_controller)
-    connect_menu(main_window=mw, profile_controller=_profile_controller, network_thread=job_queue)
+    connect_menu(
+        main_window=mw, profile_controller=_profile_controller, network_thread=job_queue
+    )
     _network_thread.start()
 
 
@@ -117,9 +109,7 @@ def _wrap_anki_objects(profile_controller):
         factory_function=profile_controller.get_reviewing_controller,
     )
 
-    addHook(
-        "showQuestion", call_method_on_reviewing_controller("on_show_question")
-    )
+    addHook("showQuestion", call_method_on_reviewing_controller("on_show_question"))
     addHook("showAnswer", call_method_on_reviewing_controller("on_show_answer"))
 
     Reviewer._answerCard = wrap(
@@ -184,8 +174,14 @@ def _wrap_anki_objects(profile_controller):
             pos="around",
         )
 
+
 _tooltipTimer = None
 _tooltipLabel = None
+
+
+def play_sound(sound):
+    clearAudioQueue()
+    mw.progress.single_shot(1, lambda: play(sound), False)
 
 
 def showToolTip(medals, period=local_conf["duration"]):
@@ -222,6 +218,10 @@ def showToolTip(medals, period=local_conf["duration"]):
     lab.show()
     _tooltipTimer = mw.progress.timer(period, closeTooltip, False)
     _tooltipLabel = lab
+    if local_conf["play_sound"] == "false":
+        pass
+    else:
+        play_sound(sfx_src)
 
 
 def closeTooltip():
@@ -237,26 +237,32 @@ def closeTooltip():
         _tooltipTimer.stop()
         _tooltipTimer = None
 
+
 if local_conf["show_image_on_tooltip"] == "false":
+
     def medal_html(medal):
         return """
             <td valign="middle" style="text-align:center">
                 <center><b>{call} ×1</b></center>
             </td>
         """.format(
-            img_src=medal.medal_image, call=medal.call,
+            call=medal.call,
         )
+
 else:
+
     def medal_html(medal):
+        global sfx_src
+        sfx_src = medal.medal_sound
         return """
             <td valign="middle" style="text-align:center">
                 <img src="{img_src}">
                 <center><b>{call} ×1</b><br></center>
             </td>
         """.format(
-            img_src=medal.medal_image, call=medal.call,
+            img_src=medal.medal_image,
+            call=medal.call,
         )
-
 
 
 def inject_medals_with_js(
@@ -274,7 +280,9 @@ def inject_medals_with_js(
 
 
 def inject_medals_for_deck_overview(
-    self: Overview, get_achievements_repo, get_current_game_id,
+    self: Overview,
+    get_achievements_repo,
+    get_current_game_id,
 ):
     decks = get_current_deck_and_children(deck_manager=self.mw.col.decks)
     deck_ids = [d.id_ for d in decks]
@@ -310,7 +318,10 @@ def get_current_deck_and_children(deck_manager):
 
 
 def show_medals_overview(
-    self: CollectionStats, _old, get_achievements_repo, get_current_game_id,
+    self: CollectionStats,
+    _old,
+    get_achievements_repo,
+    get_current_game_id,
 ):
     current_deck = self.col.decks.current()["name"]
 
@@ -335,18 +346,18 @@ def show_medals_overview(
         current_game_id=get_current_game_id(),
     )
 
+
 if local_conf["language"] == "ja":
+
     def _get_stats_header(deck_name, scope_is_whole_collection, period):
         scope_name = (
-            "コレクション全体"
-            if scope_is_whole_collection
-            else f'「{deck_name}」内'
+            "コレクション全体" if scope_is_whole_collection else f"「{deck_name}」内"
         )
         time_period_description = _get_time_period_description(period)
-        return (
-            f"{scope_name}で{time_period_description}に獲得したアイテム"
-        )
+        return f"{scope_name}で{time_period_description}に獲得したアイテム"
+
 else:
+
     def _get_stats_header(deck_name, scope_is_whole_collection, period):
         scope_name = (
             "your whole collection"
@@ -354,15 +365,14 @@ else:
             else f'deck "{deck_name}"'
         )
         time_period_description = _get_time_period_description(period)
-        return (
-            f"All unclaimed items in {scope_name} {time_period_description}:"
-        )
+        return f"All unclaimed items in {scope_name} {time_period_description}:"
 
 
 PERIOD_MONTH = 0
 PERIOD_YEAR = 1
 
 if local_conf["language"] == "ja":
+
     def _get_time_period_description(period):
         if period == PERIOD_MONTH:
             return "過去１ヶ月"
@@ -370,7 +380,9 @@ if local_conf["language"] == "ja":
             return "過去１年"
         else:
             return "今まで"
+
 else:
+
     def _get_time_period_description(period):
         if period == PERIOD_MONTH:
             return "over the past month"
