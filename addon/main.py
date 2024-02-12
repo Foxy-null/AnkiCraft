@@ -27,7 +27,7 @@ from aqt import mw, gui_hooks
 from aqt.qt import *
 from aqt.deckbrowser import DeckBrowser
 from aqt.reviewer import Reviewer
-from aqt.sound import play, clearAudioQueue
+from aqt.sound import play, clearAudioQueue, av_player
 from aqt.overview import Overview
 from anki.hooks import addHook, wrap
 from anki.stats import CollectionStats
@@ -180,13 +180,19 @@ _tooltipLabel = None
 
 
 def play_sound(sound):
-    clearAudioQueue()
-    mw.progress.single_shot(1, lambda: play(sound), False)
+    mw.progress.single_shot(1, lambda: av_player.insert_file(sound), False)
 
 
 def showToolTip(medals, period=local_conf["duration"]):
     global _tooltipTimer, _tooltipLabel
 
+    if local_conf["play_sound"] == "false":
+        pass
+    else:
+        av_player.clear_queue_and_maybe_interrupt()
+        for m in medals:
+            play_sound(m.medal_sound)
+            
     class CustomLabel(QLabel):
         def mousePressEvent(self, evt):
             evt.accept()
@@ -218,11 +224,6 @@ def showToolTip(medals, period=local_conf["duration"]):
     lab.show()
     _tooltipTimer = mw.progress.timer(period, closeTooltip, False)
     _tooltipLabel = lab
-    if local_conf["play_sound"] == "false":
-        pass
-    else:
-        play_sound(sfx_src)
-
 
 def closeTooltip():
     global _tooltipLabel, _tooltipTimer
