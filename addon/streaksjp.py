@@ -454,7 +454,7 @@ HALO_KILLING_SPREE_STATES = [
     ),
     KillingSpreeMedalState(
         id_="閃緑岩",
-        medal_image=image_path("Deorite.webp"),
+        medal_image=image_path("Diorite.webp"),
         name="閃緑岩",
         game_id="halo_3",
         rank=3,
