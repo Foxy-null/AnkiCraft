@@ -179,7 +179,7 @@ _tooltipLabel = None
 
 
 def play_sound(sound):
-    mw.progress.single_shot(0, lambda: av_player._play(sound), False)
+    mw.progress.single_shot(0, lambda: av_player._play(sound), True)
 
 
 def showToolTip(medals, period=local_conf["duration"]):
