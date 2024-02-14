@@ -386,9 +386,11 @@ class NewAchievement:
         def medal_name(self):
             return self.medal.name_jp
 
-    @property
-    def medal_name(self):
-        return self.medal.name
+    else:
+
+        @property
+        def medal_name(self):
+            return self.medal.name
 
     @property
     def medal_img_src(self):
@@ -512,9 +514,9 @@ HALO_KILLING_SPREE_STATES = [
     ),
     KillingSpreeMedalState(
         id_="閃緑岩",
-        medal_image=image_path("Deorite.webp"),
+        medal_image=image_path("Diorite.webp"),
         medal_sound=sound_path("stone"),
-        name="Deorite",
+        name="Diorite",
         name_jp="閃緑岩",
         game_id="halo_3",
         rank=3,

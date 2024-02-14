@@ -19,7 +19,6 @@ from functools import partial, wraps
 import os
 from pathlib import Path
 from queue import Queue
-import random
 from threading import Thread
 from urllib.parse import urljoin
 
@@ -180,7 +179,7 @@ _tooltipLabel = None
 
 
 def play_sound(sound):
-    mw.progress.single_shot(1, lambda: av_player.insert_file(sound), False)
+    mw.progress.single_shot(0, lambda: av_player._play(sound), False)
 
 
 def showToolTip(medals, period=local_conf["duration"]):
@@ -189,10 +188,15 @@ def showToolTip(medals, period=local_conf["duration"]):
     if local_conf["play_sound"] == "false":
         pass
     else:
-        av_player.clear_queue_and_maybe_interrupt()
+        sounds = []
+        av_player.stop_and_clear_queue()
         for m in medals:
-            play_sound(m.medal_sound)
-            
+            av_player.insert_file(m.medal_sound)
+        next = av_player._pop_next()
+        if next is not None:
+            av_player._play(next)
+            av_player._on_play_finished()
+
     class CustomLabel(QLabel):
         def mousePressEvent(self, evt):
             evt.accept()
@@ -224,6 +228,7 @@ def showToolTip(medals, period=local_conf["duration"]):
     lab.show()
     _tooltipTimer = mw.progress.timer(period, closeTooltip, False)
     _tooltipLabel = lab
+
 
 def closeTooltip():
     global _tooltipLabel, _tooltipTimer

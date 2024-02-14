@@ -10,6 +10,39 @@ from .streaks import get_all_displayable_medals, all_game_ids
 from .config import local_conf
 
 
+# Config start (also in line 120)
+
+if local_conf["language"] == "ja":
+    cave_name = "洞窟"
+    ocean_name = "海バイオーム"
+    overworld_name = "草原バイオーム"
+    farm_name = "食料畑"
+    forest_name = "森林バイオーム"
+    trap_tower_name = "トラップタワー"
+else:
+    cave_name = "Cave"
+    ocean_name = "Ocean"
+    overworld_name = "Overworld"
+    farm_name = "Farm"
+    forest_name = "Forest"
+    trap_tower_name = "Trap Tower"
+
+if local_conf["FontRange"] == "disabled" and local_conf["language"] == "ja":
+    overview_font = "medals_overview-ja.html"
+elif local_conf["FontRange"] == "disabled":
+    overview_font = "medals_overview.html"
+elif local_conf["FontRange"] == "all" and local_conf["language"] == "ja":
+    overview_font = "medals_overview-ja_all.html"
+elif local_conf["FontRange"] == "all":
+    overview_font = "medals_overview_all.html"
+elif local_conf["language"] == "ja":
+    overview_font = "medals_overview-ja_limit.html"
+else:
+    overview_font = "medals_overview_limit.html"
+
+# Config end
+
+
 def MedalsOverviewHTML(achievements, header_text, current_game_id):
     return (
         MedalsOverview(
@@ -72,15 +105,26 @@ def medal_types(achievement_count_by_medal_id: dict):
         key=lambda medal_count_pairs: medal_count_pairs[0].rank,
     )
 
-    return [
-        MedalType(
-            medal=medal,
-            name=medal.name,
-            img_src=medal.medal_image,
-            count=count,
-        )
-        for medal, (medal_id, count) in sorted_medals_with_counts
-    ]
+    if local_conf["language"] == "ja":
+        return [
+            MedalType(
+                medal=medal,
+                name=medal.name_jp,
+                img_src=medal.medal_image,
+                count=count,
+            )
+            for medal, (medal_id, count) in sorted_medals_with_counts
+        ]
+    else:
+        return [
+            MedalType(
+                medal=medal,
+                name=medal.name,
+                img_src=medal.medal_image,
+                count=count,
+            )
+            for medal, (medal_id, count) in sorted_medals_with_counts
+        ]
 
 
 @attr.s(frozen=True)
@@ -110,30 +154,18 @@ def MedalsOverview(
     current_game_id,
     header_text="Items collected in this deck:",
 ):
-    if local_conf["FontRange"] == "disabled":
-        with open(_templates_dir / "medals_overview.html", "r", encoding="utf-8") as f:
-            template = Template(f.read())
-    elif local_conf["FontRange"] == "all":
-        with open(
-            _templates_dir / "medals_overview_all.html", "r", encoding="utf-8"
-        ) as f:
-            template = Template(f.read())
-    else:
-        with open(
-            _templates_dir / "medals_overview_limit.html", "r", encoding="utf-8"
-        ) as f:
-            template = Template(f.read())
-
+    with open(_templates_dir / overview_font, "r", encoding="utf-8") as f:
+        template = Template(f.read())
     return template.render(
         medal_types_by_game_id=medal_types_by_game_id(medal_types, all_game_ids),
         header_text=header_text,
         game_names_by_id=dict(
-            halo_3="Cave",
-            mw2="Ocean",
-            halo_5="Overworld",
-            halo_infinite="Farm",
-            vanguard="Forest",
-            trap_tower="Trap Tower",
+            halo_3=cave_name,
+            mw2=ocean_name,
+            halo_5=overworld_name,
+            halo_infinite=farm_name,
+            vanguard=forest_name,
+            trap_tower=trap_tower_name,
         ),
         selected_game_id=current_game_id,
     )

@@ -170,9 +170,17 @@ class PersistedAchievement:
     def with_medal(self, medal):
         return attr.evolve(self, medal=medal)
 
-    @property
-    def medal_name(self):
-        return self.medal.name
+    if local_conf["language"] == "ja":
+
+        @property
+        def medal_name(self):
+            return self.medal.name_jp
+
+    else:
+
+        @property
+        def medal_name(self):
+            return self.medal.name
 
     @property
     def medal_img_src(self):
