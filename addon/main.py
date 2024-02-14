@@ -194,7 +194,7 @@ def showToolTip(medals, period=local_conf["duration"]):
             av_player.insert_file(m.medal_sound)
         next = av_player._pop_next()
         if next is not None:
-            av_player._play(next)
+            play_sound(next)
             av_player._on_play_finished()
 
     class CustomLabel(QLabel):
