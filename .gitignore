@@ -1,2 +1,4 @@
 addon/__pycache__/
 addon/_vendor/__pycache__/
+*.pyc
+addon/meta.json

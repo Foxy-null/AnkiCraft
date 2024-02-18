@@ -188,7 +188,6 @@ def showToolTip(medals, period=local_conf["duration"]):
     if local_conf["play_sound"] == "false":
         pass
     else:
-        sounds = []
         av_player.stop_and_clear_queue()
         for m in medals:
             av_player.insert_file(m.medal_sound)
