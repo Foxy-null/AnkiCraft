@@ -654,7 +654,7 @@ MW2_KILLSTREAK_STATES = [
     KillingSpreeMedalState(
         id_="乾燥した昆布-1",
         medal_image=image_path("Dried_Kelp.webp"),
-        medal_sound=sound_path("food"),
+        medal_sound=sound_path("grass"),
         name="Dried Kelp",
         name_jp="乾燥した昆布",
         game_id="mw2",
