@@ -661,11 +661,11 @@ MW2_KILLSTREAK_STATES = [
         rank=1,
     ),
     KillingSpreeMedalState(
-        id_="砂",
-        medal_image=image_path("mw2/Sand.webp.png"),
-        medal_sound=sound_path("sand"),
-        name="Sand",
-        name_jp="砂",
+        id_="イカスミ",
+        medal_image=image_path("mw2/Ink_Sac.webp"),
+        medal_sound=sound_path("item"),
+        name="Ink Sac",
+        name_jp="イカスミ",
         game_id="mw2",
         # call="UAV recon standing by",
         rank=2,
@@ -740,15 +740,49 @@ MW2_KILLSTREAK_STATES = [
         # call="シーランタンをクラフト可能",
         rank=9,
     ),
+    KillingSpreeMedalState(
+        id_="TNTブロック",
+        medal_image=image_path("mw2/TNT.webp.png"),
+        medal_sound=sound_path("grass"),
+        name="TNT",
+        name_jp="TNTブロック",
+        game_id="mw2",
+        rank=10,
+    ),
     EndState(
         medal_state=KillingSpreeMedalState(
-            id_="TNTブロック",
-            medal_image=image_path("mw2/TNT.webp.png"),
-            medal_sound=sound_path("grass"),
-            name="TNT",
-            name_jp="TNTブロック",
+            id_="輝くイカスミ",
+            medal_image=image_path("mw2/Glow_Ink_Sac.webp"),
+            medal_sound=sound_path("item"),
+            name="Glow Ink Sac",
+            name_jp="輝くイカスミ",
             game_id="mw2",
-            rank=10,
+            rank=11,
+        ),
+        index_to_return_to=1,
+    ),
+]
+
+MW2_KILLING_SPREE_STATES = [
+    KillingSpreeNoMedalState(rank=0),
+    KillingSpreeMedalState(
+        id_="砂",
+        medal_image=image_path("mw2/Sand.webp.png"),
+        medal_sound=sound_path("sand"),
+        name="Sand",
+        name_jp="砂",
+        game_id="mw2",
+        rank=1,
+    ),
+    EndState(
+        medal_state=KillingSpreeMedalState(
+            id_="砂利",
+            medal_image=image_path("mw2/Gravel.webp"),
+            medal_sound=sound_path("gravel"),
+            name="Gravel",
+            name_jp="砂利",
+            game_id="mw2",
+            rank=2,
         ),
         index_to_return_to=1,
     ),
@@ -1453,6 +1487,7 @@ def get_all_displayable_medals():
         HALO_KILLING_SPREE_STATES,
         HALO_KILLSTREAK_STATES,
         MW2_KILLSTREAK_STATES,
+        MW2_KILLING_SPREE_STATES,
         HALO_5_MULTIKILL_STATES,
         HALO_5_KILLING_SPREE_STATES,
         HALO_INFINITE_MULTIKILL_STATES,
@@ -1490,7 +1525,11 @@ def get_stores_by_game_id(config):
                 InitialStreakState(
                     states=MW2_KILLSTREAK_STATES,
                     interval_s=config["killing_spree_interval_s"],
-                )
+                ),
+                InitialStreakState(
+                    states=MW2_KILLING_SPREE_STATES,
+                    interval_s=config["killing_spree_interval_s"],
+                ),
             ]
         ),
         halo_5=Store(
