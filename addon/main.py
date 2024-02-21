@@ -21,12 +21,14 @@ from pathlib import Path
 from queue import Queue
 from threading import Thread
 from urllib.parse import urljoin
+import aqt.sound
 
 from aqt import mw, gui_hooks
 from aqt.qt import *
 from aqt.deckbrowser import DeckBrowser
 from aqt.reviewer import Reviewer
 from aqt.sound import play, clearAudioQueue, av_player
+from anki.sound import AV_REF_RE, AVTag, SoundOrVideoTag
 from aqt.overview import Overview
 from anki.hooks import addHook, wrap
 from anki.stats import CollectionStats
@@ -92,6 +94,15 @@ def main():
     _network_thread.start()
 
 
+# def on_webview_will_set_content(web_content: aqt.webview.WebContent, context):
+
+#     if not isinstance(context, aqt.deckbrowser.DeckBrowser):
+#         return
+
+#     MedalsOverviewHTML
+#     web_content.body += raw_html
+
+
 def _wrap_anki_objects(profile_controller):
     """
     profileLoaded hook fired after deck broswer gets shown(???), so we can't
@@ -149,6 +160,7 @@ def _wrap_anki_objects(profile_controller):
         DeckBrowser.refresh = wrap(
             old=DeckBrowser.refresh, new=todays_medals_injector, pos="after"
         )
+
         DeckBrowser.show = wrap(
             old=DeckBrowser.show, new=todays_medals_injector, pos="after"
         )
@@ -176,10 +188,48 @@ def _wrap_anki_objects(profile_controller):
 
 _tooltipTimer = None
 _tooltipLabel = None
+sfx: list[AVTag] = []
+
+
+def _pop_next():
+    if not sfx:
+        return None
+    return sfx.pop(0)
+
+
+def _play_next_if_idle() -> None:
+    if av_player.current_player:
+        return
+
+    next = _pop_next()
+    if next is not None:
+        _play(next)
+    av_player._play_next_if_idle()
+
+
+def insert_file(filename: str) -> None:
+    sfx.insert(0, SoundOrVideoTag(filename=filename))
+    _play_next_if_idle()
+
+
+def _play(tag: AVTag) -> None:
+    aqt.sound.av_player.no_interrupt = True
+    best_player = av_player._best_player_for_tag(tag)
+    if best_player:
+        av_player.current_player = best_player
+        gui_hooks.av_player_will_play(tag)
+        av_player.current_player.play(tag, _on_play_finished)
+
+
+def _on_play_finished() -> None:
+    gui_hooks.av_player_did_end_playing(av_player.current_player)
+    av_player.current_player = None
+    aqt.sound.av_player.no_interrupt = False
+    _play_next_if_idle()
 
 
 def play_sound(sound):
-    mw.progress.single_shot(0, lambda: av_player._play(sound), True)
+    mw.progress.single_shot(0, lambda: _play(sound), True)
 
 
 def showToolTip(medals, period=local_conf["duration"]):
@@ -190,11 +240,10 @@ def showToolTip(medals, period=local_conf["duration"]):
     else:
         av_player.stop_and_clear_queue()
         for m in medals:
-            av_player.insert_file(m.medal_sound)
-        next = av_player._pop_next()
+            insert_file(m.medal_sound)
+        next = _pop_next()
         if next is not None:
             play_sound(next)
-            av_player._on_play_finished()
 
     class CustomLabel(QLabel):
         def mousePressEvent(self, evt):
@@ -424,3 +473,4 @@ def cutoff_datetime(self):
 
 
 main()
+# gui_hooks.webview_will_set_content.append(on_webview_will_set_content)

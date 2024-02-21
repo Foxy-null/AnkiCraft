@@ -918,7 +918,7 @@ HALO_5_KILLING_SPREE_STATES = [
         rank=5,
     ),
     KillingSpreeNoMedalState(rank=6),
-    KillingSpreeNoMedalState(
+    KillingSpreeMedalState(
         id_="革",
         medal_image=image_path("halo_5/Leather.webp"),
         medal_sound=sound_path("item"),
