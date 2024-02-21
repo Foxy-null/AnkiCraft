@@ -873,9 +873,7 @@ HALO_5_MULTIKILL_STATES = [
     ),
     MultikillMedalState(
         id_="ロケット花火",
-        medal_image=image_path(
-            "halo_5/Firework_Rocket.png"
-        ),
+        medal_image=image_path("halo_5/Firework_Rocket.png"),
         medal_sound=sound_path("firework"),
         name="Firework rocket",
         name_jp="ロケット花火",
@@ -954,7 +952,7 @@ HALO_5_KILLING_SPREE_STATES = [
         rank=15,
     ),
     KillingSpreeNoMedalState(rank=16),
-    KillingSpreeNoMedalState(rank=17),d
+    KillingSpreeNoMedalState(rank=17),
     KillingSpreeNoMedalState(rank=18),
     KillingSpreeNoMedalState(rank=19),
     KillingSpreeNoMedalState(rank=20),
