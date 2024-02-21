@@ -16,7 +16,7 @@ from ._vendor import attr
 from .config import local_conf
 
 DEFAULT_GAME_ID = "halo_3"
-all_game_ids = ["halo_3", "mw2", "halo_5", "halo_infinite", "vanguard"]
+all_game_ids = ["halo_3", "mw2", "halo_5", "halo_infinite", "vanguard", "trap_tower"]
 
 
 class MultikillMixin:
