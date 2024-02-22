@@ -7,7 +7,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 <div style="text-align: center;"></div>
 
 ![anki_20230930_160544_459](https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6)
-![anki_20230930_155827_458](https://private-user-images.githubusercontent.com/72304646/303327760-b8a7736e-d896-45b7-92a5-5c46f1ef0ac7.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDg1MjQ0OTEsIm5iZiI6MTcwODUyNDE5MSwicGF0aCI6Ii83MjMwNDY0Ni8zMDMzMjc3NjAtYjhhNzczNmUtZDg5Ni00NWI3LTkyYTUtNWM0NmYxZWYwYWM3LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAyMjElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMjIxVDE0MDMxMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTJkODdjYWM3ZWU2MzMwYzhjMjczMzlmODM0NDM2MjhjY2FhYzQ1MDMwZDY2M2IxYWI4MGJlNWNmOTRkMWM0NDYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.gVlakmVMZUNW1OEWKnukB57YAJTrDkXBPo0gWSmdI0o)
+![anki_20230930_155827_458](https://github.com/AnKing-VIP/anki-audiovisual-feedback/assets/72304646/b8a7736e-d896-45b7-92a5-5c46f1ef0ac7)
 
 *Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [Minecraft theme](https://github.com/AnKing-VIP/anki-audiovisual-feedback/wiki/Minecraft)
 
@@ -22,7 +22,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ## Requirements
  - [This addon](https://ankiweb.net/shared/info/368161874)
  - [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
- - Minecraft SFX ([[Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip)
+ - [Minecraft SFX](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip)
 
 ## Installation
  
