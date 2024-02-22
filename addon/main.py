@@ -216,6 +216,7 @@ def _play_next_if_idle() -> None:
     if av_player.current_player:
         return
 
+    aqt.sound.av_player.no_interrupt = True
     next = _pop_next()
     if next is not None:
         _play(next)
@@ -228,7 +229,6 @@ def insert_file(filename: str) -> None:
 
 
 def _play(tag: AVTag) -> None:
-    aqt.sound.av_player.no_interrupt = True
     best_player = av_player._best_player_for_tag(tag)
     if best_player:
         av_player.current_player = best_player
@@ -258,7 +258,7 @@ def showToolTip(medals, period=local_conf["duration"]):
             insert_file(m.medal_sound)
         next = _pop_next()
         if next is not None:
-            play_sound(next)
+            _play(next)
 
     class CustomLabel(QLabel):
         def mousePressEvent(self, evt):
