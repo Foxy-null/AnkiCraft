@@ -215,16 +215,15 @@ def _pop_next():
 def _play_next_if_idle() -> None:
     if av_player.current_player:
         return
-
-    aqt.sound.av_player.no_interrupt = True
     next = _pop_next()
     if next is not None:
         _play(next)
+        aqt.sound.av_player.no_interrupt = True
     av_player._play_next_if_idle()
 
 
 def insert_file(filename: str) -> None:
-    sfx.insert(0, SoundOrVideoTag(filename=filename))
+    sfx.insert(len(sfx), SoundOrVideoTag(filename=filename))
     _play_next_if_idle()
 
 
