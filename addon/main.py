@@ -99,8 +99,23 @@ def main():
 #     if not isinstance(context, aqt.deckbrowser.DeckBrowser):
 #         return
 
-#     MedalsOverviewHTML
-#     web_content.body += raw_html
+#     _profile_controller = ProfileController(
+#         local_conf=local_conf,
+#         show_achievements=show_tool_tip_if_medals,
+#         get_profile_folder_path=_get_profile_folder_path,
+#         stores_by_game_id=_stores_by_game_id,
+#         job_queue=job_queue,
+#         main_window=mw,
+#     )
+
+#     html_source = TodaysMedalsJS(
+#         achievements=_profile_controller.get_achievements_repo().todays_achievements(
+#             cutoff_datetime(self)
+#         ),
+#         current_game_id=_profile_controller.get_current_game_id(),
+#     )
+
+#     web_content.body += html_source
 
 
 def _wrap_anki_objects(profile_controller):

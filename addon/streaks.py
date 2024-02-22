@@ -541,7 +541,7 @@ HALO_KILLING_SPREE_STATES = [
     ),
     KillingSpreeMedalState(
         id_="銅インゴット",
-        medal_image=image_path("Copper_Ingot.png"),
+        medal_image=image_path("Copper_Ingot.webp"),
         medal_sound=sound_path("stone"),
         name="Copper Ingot",
         name_jp="金インゴット",
