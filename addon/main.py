@@ -218,8 +218,9 @@ def _play_next_if_idle() -> None:
     next = _pop_next()
     if next is not None:
         _play(next)
-        aqt.sound.av_player.no_interrupt = True
-    av_player._play_next_if_idle()
+    else:
+        aqt.sound.av_player.no_interrupt = False
+        av_player._play_next_if_idle()
 
 
 def insert_file(filename: str) -> None:
@@ -238,7 +239,6 @@ def _play(tag: AVTag) -> None:
 def _on_play_finished() -> None:
     gui_hooks.av_player_did_end_playing(av_player.current_player)
     av_player.current_player = None
-    aqt.sound.av_player.no_interrupt = False
     _play_next_if_idle()
 
 
@@ -253,6 +253,7 @@ def showToolTip(medals, period=local_conf["duration"]):
         pass
     else:
         av_player.stop_and_clear_queue()
+        aqt.sound.av_player.no_interrupt = True
         for m in medals:
             insert_file(m.medal_sound)
         next = _pop_next()
