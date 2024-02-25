@@ -2,13 +2,14 @@
 [![Addon Download](https://github-production-user-asset-6210df.s3.amazonaws.com/72304646/263796774-b60e19fa-60b3-456e-9d82-a261fe0af1b8.png)](https://ankiweb.net/shared/info/368161874)
 ## DEMO
 
-https://github.com/Foxy-null/AnkiCraft/assets/72304646/f21bce71-9bc3-4f52-a7f1-674c948ea320
+https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-ff9f852f27a5
 
 <div style="text-align: center;"></div>
 
 ![anki_20230930_160544_459](https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6)
-![anki_20230930_155827_458](https://github.com/Foxy-null/AnkiCraft/assets/72304646/8034b639-5cf9-4715-a5bd-e2b3c6d3997d)
-*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [Minecraft theme](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip)
+![anki_20230930_155827_458](https://github.com/AnKing-VIP/anki-audiovisual-feedback/assets/72304646/b8a7736e-d896-45b7-92a5-5c46f1ef0ac7)
+
+*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [Minecraft theme](https://github.com/AnKing-VIP/anki-audiovisual-feedback/wiki/Minecraft)
 
 ## Change from the original Killstreaks addon
  
@@ -20,10 +21,8 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/f21bce71-9bc3-4f52-a7f1-6
 
 ## Requirements
  - [This addon](https://ankiweb.net/shared/info/368161874)
- - [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350) or [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
- - Minecraft SFX ([[Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) or [user_files.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/user_files.zip)]
-  (I recommend [Minecraft.zip](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip) one.)
-
+ - [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
+ - [Minecraft SFX](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip)
 
 ## Installation
  
