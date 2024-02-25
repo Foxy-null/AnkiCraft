@@ -8,10 +8,7 @@ from ._vendor.yoyo import read_migrations
 from ._vendor.yoyo.exceptions import LockTimeout
 from .addons import THIS_ADDON_PATH
 from .config import local_conf
-if local_conf["language"] == "en":
-    from .streaks import get_all_displayable_medals
-elif local_conf["language"] == "ja":
-    from .streaksjp import get_all_displayable_medals
+from .streaks import get_all_displayable_medals
 from .toolz import join
 
 min_datetime = datetime(
@@ -25,9 +22,7 @@ class DbSettings:
     migration_dir_path = attr.ib()
 
     @classmethod
-    def from_profile_folder_path(
-        cls, profile_folder_path, addon_path=THIS_ADDON_PATH
-    ):
+    def from_profile_folder_path(cls, profile_folder_path, addon_path=THIS_ADDON_PATH):
         return cls(
             db_path=profile_folder_path / "collection.media/_AnkiCraft.db",
             migration_dir_path=addon_path / "migrations",
@@ -77,7 +72,7 @@ class AchievementsRepository:
                 FROM achievements
                 WHERE id in ({in_placeholders})
                 """,
-                tuple(row_ids)
+                tuple(row_ids),
             )
 
             return [PersistedAchievement(*row, medal=None) for row in select_cursor]
@@ -90,7 +85,7 @@ class AchievementsRepository:
                 SELECT * FROM achievements
                 WHERE created_at > ?
                 """,
-                (since_datetime, )
+                (since_datetime,),
             )
 
             loaded_achievements = [
@@ -175,9 +170,17 @@ class PersistedAchievement:
     def with_medal(self, medal):
         return attr.evolve(self, medal=medal)
 
-    @property
-    def medal_name(self):
-        return self.medal.name
+    if local_conf["language"] == "ja":
+
+        @property
+        def medal_name(self):
+            return self.medal.name_jp
+
+    else:
+
+        @property
+        def medal_name(self):
+            return self.medal.name
 
     @property
     def medal_img_src(self):
@@ -185,8 +188,9 @@ class PersistedAchievement:
 
 
 def day_start_time(rollover_hour):
-        life = min_datetime
-        return datetime.combine(life.date(), time(hour=rollover_hour))
+    life = min_datetime
+    return datetime.combine(life.date(), time(hour=rollover_hour))
+
 
 class SettingsRepository:
     def __init__(self, get_db_connection):
@@ -212,8 +216,5 @@ class SettingsRepository:
     @property
     def should_auto_switch_game(self):
         with self.get_db_connection() as conn:
-            cursor = conn.execute(
-                "SELECT should_auto_switch_game FROM settings;"
-            )
+            cursor = conn.execute("SELECT should_auto_switch_game FROM settings;")
             return cursor.fetchone()[0]
-

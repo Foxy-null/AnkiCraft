@@ -19,14 +19,16 @@ from functools import partial, wraps
 import os
 from pathlib import Path
 from queue import Queue
-import random
 from threading import Thread
 from urllib.parse import urljoin
+import aqt.sound
 
 from aqt import mw, gui_hooks
 from aqt.qt import *
 from aqt.deckbrowser import DeckBrowser
 from aqt.reviewer import Reviewer
+from aqt.sound import play, clearAudioQueue, av_player
+from anki.sound import AV_REF_RE, AVTag, SoundOrVideoTag
 from aqt.overview import Overview
 from anki.hooks import addHook, wrap
 from anki.stats import CollectionStats
@@ -39,31 +41,20 @@ from .controllers import (
 from .networking import process_queue, stop_thread_on_app_close
 from .persistence import day_start_time, min_datetime
 from ._vendor import attr
-if local_conf["language"] == "ja":
-    from .viewsjp import (
-        MedalsOverviewHTML,
-        TodaysMedalsJS,
-        TodaysMedalsForDeckJS,
-        js_content,
-    )
-    from .streaksjp import get_stores_by_game_id
-    TMJS = TodaysMedalsJS
-else:
-    from .views import (
-        MedalsOverviewHTML,
-        TodaysMedalsJS,
-        TodaysMedalsForDeckJS,
-        js_content,
-    )
-    from .streaks import get_stores_by_game_id
-    TMJS = TodaysMedalsJS
 
-if local_conf["language"] == "ja":
-        from .streaksjp import get_stores_by_game_id
-        from .menujp import connect_menu
-else:
-        from .streaks import get_stores_by_game_id
-        from .menu import connect_menu
+from .views import (
+    MedalsOverviewHTML,
+    TodaysMedalsJS,
+    TodaysMedalsForDeckJS,
+    js_content,
+)
+from .streaks import get_stores_by_game_id
+
+TMJS = TodaysMedalsJS
+
+from .streaks import get_stores_by_game_id
+from .menu import connect_menu
+
 
 def show_tool_tip_if_medals(displayable_medals):
     if len(displayable_medals) > 0:
@@ -97,8 +88,34 @@ mw.killstreaks_profile_controller = _profile_controller
 
 def main():
     _wrap_anki_objects(_profile_controller)
-    connect_menu(main_window=mw, profile_controller=_profile_controller, network_thread=job_queue)
+    connect_menu(
+        main_window=mw, profile_controller=_profile_controller, network_thread=job_queue
+    )
     _network_thread.start()
+
+
+# def on_webview_will_set_content(web_content: aqt.webview.WebContent, context):
+
+#     if not isinstance(context, aqt.deckbrowser.DeckBrowser):
+#         return
+
+#     _profile_controller = ProfileController(
+#         local_conf=local_conf,
+#         show_achievements=show_tool_tip_if_medals,
+#         get_profile_folder_path=_get_profile_folder_path,
+#         stores_by_game_id=_stores_by_game_id,
+#         job_queue=job_queue,
+#         main_window=mw,
+#     )
+
+#     html_source = TodaysMedalsJS(
+#         achievements=_profile_controller.get_achievements_repo().todays_achievements(
+#             cutoff_datetime(self)
+#         ),
+#         current_game_id=_profile_controller.get_current_game_id(),
+#     )
+
+#     web_content.body += html_source
 
 
 def _wrap_anki_objects(profile_controller):
@@ -117,9 +134,7 @@ def _wrap_anki_objects(profile_controller):
         factory_function=profile_controller.get_reviewing_controller,
     )
 
-    addHook(
-        "showQuestion", call_method_on_reviewing_controller("on_show_question")
-    )
+    addHook("showQuestion", call_method_on_reviewing_controller("on_show_question"))
     addHook("showAnswer", call_method_on_reviewing_controller("on_show_answer"))
 
     Reviewer._answerCard = wrap(
@@ -160,6 +175,7 @@ def _wrap_anki_objects(profile_controller):
         DeckBrowser.refresh = wrap(
             old=DeckBrowser.refresh, new=todays_medals_injector, pos="after"
         )
+
         DeckBrowser.show = wrap(
             old=DeckBrowser.show, new=todays_medals_injector, pos="after"
         )
@@ -184,12 +200,65 @@ def _wrap_anki_objects(profile_controller):
             pos="around",
         )
 
+
 _tooltipTimer = None
 _tooltipLabel = None
+sfx: list[AVTag] = []
+
+
+def _pop_next():
+    if not sfx:
+        return None
+    return sfx.pop(0)
+
+
+def _play_next_if_idle() -> None:
+    if av_player.current_player:
+        return
+    next = _pop_next()
+    if next is not None:
+        _play(next)
+    else:
+        aqt.sound.av_player.interrupt_current_audio = True
+        av_player._play_next_if_idle()
+
+
+def insert_file(filename: str) -> None:
+    sfx.insert(len(sfx), SoundOrVideoTag(filename=filename))
+    _play_next_if_idle()
+
+
+def _play(tag: AVTag) -> None:
+    best_player = av_player._best_player_for_tag(tag)
+    if best_player:
+        av_player.current_player = best_player
+        gui_hooks.av_player_will_play(tag)
+        av_player.current_player.play(tag, _on_play_finished)
+
+
+def _on_play_finished() -> None:
+    gui_hooks.av_player_did_end_playing(av_player.current_player)
+    av_player.current_player = None
+    _play_next_if_idle()
+
+
+def play_sound(sound):
+    mw.progress.single_shot(0, lambda: _play(sound), True)
 
 
 def showToolTip(medals, period=local_conf["duration"]):
     global _tooltipTimer, _tooltipLabel
+
+    if local_conf["play_sound"] == "false":
+        pass
+    else:
+        av_player.stop_and_clear_queue()
+        aqt.sound.av_player.interrupt_current_audio = False
+        for m in medals:
+            insert_file(m.medal_sound)
+        next = _pop_next()
+        if next is not None:
+            play_sound(next)
 
     class CustomLabel(QLabel):
         def mousePressEvent(self, evt):
@@ -237,26 +306,32 @@ def closeTooltip():
         _tooltipTimer.stop()
         _tooltipTimer = None
 
+
 if local_conf["show_image_on_tooltip"] == "false":
+
     def medal_html(medal):
         return """
             <td valign="middle" style="text-align:center">
                 <center><b>{call} ×1</b></center>
             </td>
         """.format(
-            img_src=medal.medal_image, call=medal.call,
+            call=medal.call,
         )
+
 else:
+
     def medal_html(medal):
+        global sfx_src
+        sfx_src = medal.medal_sound
         return """
             <td valign="middle" style="text-align:center">
                 <img src="{img_src}">
                 <center><b>{call} ×1</b><br></center>
             </td>
         """.format(
-            img_src=medal.medal_image, call=medal.call,
+            img_src=medal.medal_image,
+            call=medal.call,
         )
-
 
 
 def inject_medals_with_js(
@@ -274,7 +349,9 @@ def inject_medals_with_js(
 
 
 def inject_medals_for_deck_overview(
-    self: Overview, get_achievements_repo, get_current_game_id,
+    self: Overview,
+    get_achievements_repo,
+    get_current_game_id,
 ):
     decks = get_current_deck_and_children(deck_manager=self.mw.col.decks)
     deck_ids = [d.id_ for d in decks]
@@ -310,7 +387,10 @@ def get_current_deck_and_children(deck_manager):
 
 
 def show_medals_overview(
-    self: CollectionStats, _old, get_achievements_repo, get_current_game_id,
+    self: CollectionStats,
+    _old,
+    get_achievements_repo,
+    get_current_game_id,
 ):
     current_deck = self.col.decks.current()["name"]
 
@@ -335,18 +415,18 @@ def show_medals_overview(
         current_game_id=get_current_game_id(),
     )
 
+
 if local_conf["language"] == "ja":
+
     def _get_stats_header(deck_name, scope_is_whole_collection, period):
         scope_name = (
-            "コレクション全体"
-            if scope_is_whole_collection
-            else f'「{deck_name}」内'
+            "コレクション全体" if scope_is_whole_collection else f"「{deck_name}」内"
         )
         time_period_description = _get_time_period_description(period)
-        return (
-            f"{scope_name}で{time_period_description}に獲得したアイテム"
-        )
+        return f"{scope_name}で{time_period_description}に獲得したアイテム"
+
 else:
+
     def _get_stats_header(deck_name, scope_is_whole_collection, period):
         scope_name = (
             "your whole collection"
@@ -354,15 +434,14 @@ else:
             else f'deck "{deck_name}"'
         )
         time_period_description = _get_time_period_description(period)
-        return (
-            f"All unclaimed items in {scope_name} {time_period_description}:"
-        )
+        return f"All unclaimed items in {scope_name} {time_period_description}:"
 
 
 PERIOD_MONTH = 0
 PERIOD_YEAR = 1
 
 if local_conf["language"] == "ja":
+
     def _get_time_period_description(period):
         if period == PERIOD_MONTH:
             return "過去１ヶ月"
@@ -370,7 +449,9 @@ if local_conf["language"] == "ja":
             return "過去１年"
         else:
             return "今まで"
+
 else:
+
     def _get_time_period_description(period):
         if period == PERIOD_MONTH:
             return "over the past month"
@@ -407,3 +488,4 @@ def cutoff_datetime(self):
 
 
 main()
+# gui_hooks.webview_will_set_content.append(on_webview_will_set_content)

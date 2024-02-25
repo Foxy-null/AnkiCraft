@@ -1,11 +1,12 @@
 {
-    "language": "en",
-    "WhereToShowMedals": "all",
-    "show_image_on_tooltip": "true",
-    "FontRange": "overview",
-    "duration": 1500,
-    "image_height": 128,
-    "tooltip_color": "#323633",
-    "multikill_interval_s": 5000,
-    "killing_spree_interval_s": 5000
+  "language": "en",
+  "WhereToShowMedals": "all",
+  "show_image_on_tooltip": "true",
+  "FontRange": "overview",
+  "duration": 1500,
+  "image_height": 128,
+  "tooltip_color": "#323633",
+  "multikill_interval_s": 5000,
+  "killing_spree_interval_s": 5000,
+  "play_sound": "true"
 }
