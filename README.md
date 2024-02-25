@@ -29,25 +29,23 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ### English
 1. Install [AnkiCraft](https://ankiweb.net/shared/info/368161874) from AnkiWeb and choose one option.
 
-2. **(recommended) Option 1**: Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
+2. Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
 
-    **(legacy) Option 2**: Download [Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350).
+3. add `Minecraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`)
 
-3. **(recommended) Option 1**: add `Minecraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`)
-
-    **(legacy) Option 2**: replace `user_files` folder with `%appdata%\Anki2\addons21\1167194350\user_files` (It'll be like `...\addons21\1167194350\user_files\again`)
+4. Disable `Play feedback during review` option in the "AudioVisual Feedback" add-on settings.
 
 ### 日本語
 1. AnkiWebから[AnkiCraft](https://ankiweb.net/shared/info/368161874)をインストールする。
-2. アドオンのコンフィグから"language"の値を"ja"に変更
-3. **（おすすめ）オプション１**：[Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)をインストールする。
-   
-    **（旧型）オプション２**：[Advanced Answer Sounds](https://ankiweb.net/shared/info/1167194350)をインストールする。
-5. **（おすすめ）オプション１**：`Minecraft`フォルダーをテーマフォルダー内に置く。（こんな感じ→`%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`）
 
-    **（旧型）オプション２**：`user_files` フォルダーを `%appdata%\Anki2\addons21\1167194350\user_files`と置き換える。
-こんな感じ→`...\addons21\1167194350\user_files\again`
- 
+3. アドオンのコンフィグから"language"の値を"ja"に変更
+
+4. [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)をインストールする。
+
+5. `Minecraft`フォルダーをテーマフォルダー内に置く。（こんな感じになるはず→`%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images...`）
+
+6. "Audiovisual Feedback"アドオン内のテーマ設定にある`Play feedback during review`の項目をオフにする
+
 ## Usage
 
 1. Select biome to explore
