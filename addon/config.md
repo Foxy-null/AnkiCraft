@@ -14,6 +14,7 @@ TODO: SOME CONFIGS NOT FUNCITONAL YET, PLACEHOLDER ONLY
 -   `multikill_interval_s` [int]: Time between card answers to count for multikill
 -   `killing_spree_interval_s` [int]: Time between card answers to count for killing spree
 -   `play_sound` [`true`, `false`]: Whether to play sound effects upon obtaining items.
+    -   (Ensure that the "Play feedback during review" option in the "AudioVisual Feedback" add-on settings and the "Advanced Answer Sound" add-on are both disabled.)
 
 ## AnkiCraft: 各種設定（日本語）
 
