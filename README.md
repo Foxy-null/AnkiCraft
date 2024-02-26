@@ -95,3 +95,6 @@ Also, report in Japanese or English.
 
     AnkiCraft is totally free and open-source software.
 
+## Support this add-on
+
+Your [rating](https://ankiweb.net/shared/review/368161874) and star to GitHub repository will help us develop the add-on! Thank you!!!
