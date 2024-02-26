@@ -93,31 +93,6 @@ def main():
     )
     _network_thread.start()
 
-
-# def on_webview_will_set_content(web_content: aqt.webview.WebContent, context):
-
-#     if not isinstance(context, aqt.deckbrowser.DeckBrowser):
-#         return
-
-#     _profile_controller = ProfileController(
-#         local_conf=local_conf,
-#         show_achievements=show_tool_tip_if_medals,
-#         get_profile_folder_path=_get_profile_folder_path,
-#         stores_by_game_id=_stores_by_game_id,
-#         job_queue=job_queue,
-#         main_window=mw,
-#     )
-
-#     html_source = TodaysMedalsJS(
-#         achievements=_profile_controller.get_achievements_repo().todays_achievements(
-#             cutoff_datetime(self)
-#         ),
-#         current_game_id=_profile_controller.get_current_game_id(),
-#     )
-
-#     web_content.body += html_source
-
-
 def _wrap_anki_objects(profile_controller):
     """
     profileLoaded hook fired after deck broswer gets shown(???), so we can't
@@ -164,32 +139,8 @@ def _wrap_anki_objects(profile_controller):
             ),
             pos="around",
         )
+
     else:
-        todays_medals_injector = partial(
-            inject_medals_with_js,
-            view=TMJS,
-            get_achievements_repo=profile_controller.get_achievements_repo,
-            get_current_game_id=profile_controller.get_current_game_id,
-        )
-
-        DeckBrowser.refresh = wrap(
-            old=DeckBrowser.refresh, new=todays_medals_injector, pos="after"
-        )
-
-        DeckBrowser.show = wrap(
-            old=DeckBrowser.show, new=todays_medals_injector, pos="after"
-        )
-
-        Overview.refresh = wrap(
-            old=Overview.refresh,
-            new=partial(
-                inject_medals_for_deck_overview,
-                get_achievements_repo=profile_controller.get_achievements_repo,
-                get_current_game_id=profile_controller.get_current_game_id,
-            ),
-            pos="after",
-        )
-
         CollectionStats.todayStats = wrap(
             old=CollectionStats.todayStats,
             new=partial(
@@ -200,6 +151,48 @@ def _wrap_anki_objects(profile_controller):
             pos="around",
         )
 
+        todays_medals_injector = partial(
+            inject_medals_with_js,
+            view=TMJS,
+            get_achievements_repo=profile_controller.get_achievements_repo,
+            get_current_game_id=profile_controller.get_current_game_id,
+        )
+
+        # 修正ここから -----
+        from anki.utils import pointVersion
+        if pointVersion() >= 231000: # gui_hooksに変更
+
+            gui_hooks.deck_browser_did_render.remove(todays_medals_injector) # profile変更後の重複を避ける
+            gui_hooks.deck_browser_did_render.append(todays_medals_injector)
+
+            overview_medals_injector =partial(
+                inject_medals_for_deck_overview,
+                get_achievements_repo=profile_controller.get_achievements_repo,
+                get_current_game_id=profile_controller.get_current_game_id,
+            )
+
+            gui_hooks.overview_did_refresh.remove(overview_medals_injector)
+            gui_hooks.overview_did_refresh.append(overview_medals_injector)
+            # 修正ここまで -----
+
+        else: # 古いwrap
+            DeckBrowser.refresh = wrap(
+                old=DeckBrowser.refresh, new=todays_medals_injector, pos="after"
+            )
+
+            DeckBrowser.show = wrap(
+                old=DeckBrowser.show, new=todays_medals_injector, pos="after"
+            )
+
+            Overview.refresh = wrap(
+                old=Overview.refresh,
+                new=partial(
+                    inject_medals_for_deck_overview,
+                    get_achievements_repo=profile_controller.get_achievements_repo,
+                    get_current_game_id=profile_controller.get_current_game_id,
+                ),
+                pos="after",
+            )
 
 _tooltipTimer = None
 _tooltipLabel = None
@@ -488,4 +481,3 @@ def cutoff_datetime(self):
 
 
 main()
-# gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
