@@ -65,7 +65,10 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
  - old repository was deleted for cleaning up my Git LFS Storage, sorry...
 
 ## Special Thanks
-### To the creator of the wonderful Killstreaks add-on: [jac241](https://github.com/jac241)
+
+### [jac241](https://github.com/jac241) - The creator of the wonderful Killstreaks add-on
+
+### [Shigeyuki](https://www.patreon.com/Shigeyuki) - Anki's 23.10+ version support would not have been possible without his contributions.
 
 ## Reporting issues
 
@@ -92,3 +95,6 @@ Also, report in Japanese or English.
 
     AnkiCraft is totally free and open-source software.
 
+## Support this add-on
+
+Your [rating](https://ankiweb.net/shared/review/368161874) and star to GitHub repository will help us develop the add-on! Thank you!!!
