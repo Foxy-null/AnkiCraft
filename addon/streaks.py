@@ -690,7 +690,7 @@ MW2_KILLSTREAK_STATES = [
     ),
     KillingSpreeMedalState(
         id_="粘土",
-        medal_image=image_path("mw2/Clay_ball.png"),
+        medal_image=image_path("mw2/Clay_balls.png"),
         medal_sound=sound_path("gravel"),
         name="Clay Ball",
         name_jp="粘土",
