@@ -63,6 +63,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
  - I have only poor skill for both of English and Coding.
  - This is my first work on GitHub
  - old repository was deleted for cleaning up my Git LFS Storage, sorry...
+ - Generally, the number of items you can earn is fixed based on the number of correct combos of Anki cards. When you reach the highest combo of items you can earn, your item rank is reset. However, some biomes are set up with multiple layers, and each layer has a different number of combos for which the ranks are reset, allowing for more complex combinations of items to be awarded.
 
 ## Special Thanks
 
