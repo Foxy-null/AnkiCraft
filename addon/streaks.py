@@ -582,7 +582,7 @@ HALO_KILLING_SPREE_STATES = [
         medal_image=image_path("Splash_Potion_of_Healing.png"),
         medal_sound=sound_path("glass"),
         name="Splash Potion of Healing II",
-        name_jp="治癒のポーションII",
+        name_jp="治癒のスプラッシュポーションII",
         game_id="halo_3",
         rank=20,
     ),
