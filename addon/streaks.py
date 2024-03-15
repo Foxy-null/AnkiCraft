@@ -544,7 +544,7 @@ HALO_KILLING_SPREE_STATES = [
         medal_image=image_path("Copper_Ingot.webp"),
         medal_sound=sound_path("stone"),
         name="Copper Ingot",
-        name_jp="金インゴット",
+        name_jp="銅インゴット",
         game_id="halo_3",
         rank=6,
     ),
