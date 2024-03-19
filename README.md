@@ -27,16 +27,22 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ## Installation
  
 ### English
-1. Install [AnkiCraft](https://ankiweb.net/shared/info/368161874) from AnkiWeb and choose one option.
+1. Thumbs up to this add-on if you like it :)
+    - (Also star to GitHub repository too! Greatly appreciate you!) 
 
-2. Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
+2. Install [AnkiCraft](https://ankiweb.net/shared/info/368161874) from AnkiWeb and choose one option.
 
-3. add `Minecraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`)
+3. Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
 
-4. Disable `Play feedback during review` option in the "AudioVisual Feedback" add-on settings.
+4. add `Minecraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`)
+
+5. Disable `Play feedback during review` option in the "AudioVisual Feedback" add-on settings.
 
 ### 日本語
-1. AnkiWebから[AnkiCraft](https://ankiweb.net/shared/info/368161874)をインストールする。
+1. （このアドオンを気に入ってくださったら）高評価をする。
+    - (GitHubのリポジトリにもStarして頂くと泣くほど嬉しいです！)
+
+2. AnkiWebから[AnkiCraft](https://ankiweb.net/shared/info/368161874)をインストールする。
 
 3. アドオンのコンフィグから"language"の値を"ja"に変更
 
