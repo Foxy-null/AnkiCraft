@@ -27,7 +27,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ## Installation
  
 ### English
-1. Thumbs up to this add-on if you like it :)
+1. Thumbs up to this add-on in AnkiWeb page if you like it :)
     - (Also star to GitHub repository too! Greatly appreciate you!) 
 
 2. Install [AnkiCraft](https://ankiweb.net/shared/info/368161874) from AnkiWeb and choose one option.
