@@ -9,7 +9,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ![anki_20230930_160544_459](https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6)
 ![anki_20230930_155827_458](https://github.com/AnKing-VIP/anki-audiovisual-feedback/assets/72304646/b8a7736e-d896-45b7-92a5-5c46f1ef0ac7)
 
-*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [Minecraft theme](https://github.com/AnKing-VIP/anki-audiovisual-feedback/wiki/Minecraft)
+*Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [AnkiCraft theme](https://github.com/AnKing-VIP/anki-audiovisual-feedback/wiki/Minecraft)
 
 ## Change from the original Killstreaks addon
  
@@ -22,7 +22,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ## Requirements
  - [This addon](https://ankiweb.net/shared/info/368161874)
  - [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)
- - [Minecraft SFX](https://github.com/Foxy-null/AnkiCraft/raw/main/Minecraft.zip)
+ - [AnkiCraft SFX](https://github.com/Foxy-null/AnkiCraft/raw/main/AnkiCraft.zip)
 
 ## Installation
  
@@ -34,9 +34,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 3. Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
 
-4. add `Minecraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images`)
-
-5. Disable `Play feedback during review` option in the "AudioVisual Feedback" add-on settings.
+4. add `AnkiCraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images`)
 
 ### 日本語
 1. （このアドオンを気に入ってくださったら）高評価をする。
@@ -48,9 +46,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 4. [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)をインストールする。
 
-5. `Minecraft`フォルダーをテーマフォルダー内に置く。（こんな感じになるはず→`%appdata%\Anki2\addons21\231569866\user_files\themes\Minecraft\images...`）
-
-6. "Audiovisual Feedback"アドオン内のテーマ設定にある`Play feedback during review`の項目をオフにする
+5. `AnkiCraft`フォルダーをテーマフォルダー内に置く。（こんな感じになるはず→`%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images...`）
 
 ## Usage
 
