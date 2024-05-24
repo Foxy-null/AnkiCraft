@@ -1,10 +1,9 @@
 from functools import partial
-import webbrowser
 from aqt.qt import QMenu
 from aqt.qt import QMessageBox
 from .config import local_conf
 from .persistence import min_datetime
-import math
+import random
 
 from .game import (
     load_current_game_id,
@@ -223,29 +222,120 @@ def show_give_item_popup(profile_controller):
         msg3.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg3.exec() 
 
+SPECIAL_ITEMS = ["healing_potion_ii", "random_firework"]
+def get_special_item_command(id, count):
+    final_count = 0 if count <= 6400 else count - 6400
+    cmd_count = min(count, 6400)
+    
+    if(id == "healing_potion_ii"):
+        # recalulate the max counts because minecraft wont let you /give more than 100 potions
+        # good luck to anyone who has earned thousands of potions because they're gonna have to
+        # run alot of commands
+        final_count = 0 if count <= 100 else count - 100
+        cmd_count = min(count, 100)
 
+        # Supports 1.20.6
+        if(local_conf["minecraft_version_is_pre_1_20_6"] == "false"):
+            return f'/give @p splash_potion[potion_contents={{potion:"strong_healing"}}] {cmd_count}', final_count
+        
+        # Supports between 1.13 and 1.20.5
+        return f'/give @p splash_potion{{Potion:"minecraft:strong_healing"}} {cmd_count}', final_count
+    
+    if(id == "random_firework"):
+        # random varibles
+        colour = random.randrange(0, 16777215) # random hex colour in decimal form
+        fade_colour = random.randrange(0, 16777215) # random hex colour in decimal form
+        flight_time = random.randrange(0, 5) # random flight time
+
+        # Supports 1.20.6
+        if(local_conf["minecraft_version_is_pre_1_20_6"] == "false"):
+            shape = random.choice(["small_ball", "large_ball", "star", "creeper", "burst"])
+            has_trail = random.choice(["true", "false"])
+            has_twinkle = random.choice(["true", "false"])
+
+            return f'/give @p firework_rocket[fireworks={{explosions:[{{shape:"{shape}",colors:[{colour}],colors:[{fade_colour}],has_trail:{has_trail},has_twinkle:{has_twinkle}}}],flight_duration:{flight_time}}}] {cmd_count}', final_count
+        
+        shape = random.randrange(0, 4)
+        has_trail = random.choice([0, 1])
+        has_twinkle = random.choice([0, 1])
+        return f'/give @a firework_rocket{{Fireworks:{{Flight:{flight_time},Explosions:[{{Type:{shape},Flicker:{has_twinkle}b,Trail:{has_trail}b,Colors:[I{colour}],FadeColors:[I{fade_colour}]}}]}}}} {cmd_count}', final_count
+
+        # I cannot stress how annoyed i was to find out the minecraft changed the way you give items with nbt data a month ago
+    
 from .views import medal_types
 def get_item_command(profile_controller):
+    
+    medals = medal_types(profile_controller.get_achievements_repo().achievements_for_whole_collection_since(min_datetime))
 
+    # variables required to percist outside the loop
     commands = []
     current_command = ""
-    item_index = -1
+    riding_index = -1
+    medal_index = -1
+    items_left = 0
+    unique_item_types_counter = 0
+    minecraft_id = "pufferfish" # should never be given, i just find them funny
+    count = 0
+    original_count = 0
 
-    for m in medal_types(profile_controller.get_achievements_repo().achievements_for_whole_collection_since(min_datetime)):
-        minecraft_id = m.medal.minecraft_id.replace("minecraft:", "")
-        count = m.count
-        item_index += 1
+    while(medal_index < len(medals) - 1):
+    
+        # Get the item
+        if(items_left <= 0): # The old item has been completely added, a new item can now be added
+            # Get the data for the item
+            medal_index += 1
+            minecraft_id = medals[medal_index].medal.minecraft_id.replace("minecraft:", "")
+            count = medals[medal_index].count
 
-        if(item_index == 0):
+            items_left = count
+            original_count = count
+            unique_item_types_counter += 1
+
+        # check for special item
+        if(minecraft_id in SPECIAL_ITEMS):
+            cmd, items_left = get_special_item_command(minecraft_id, items_left)
+            commands.append(cmd)
+            riding_index = -1
+            unique_item_types_counter = 0
+            current_command = ""
+            continue
+
+        # Check if item count is larger than 127 and if it is, record the amount of items left to add to the command
+        count = min(count, 127)
+        items_left = items_left - count
+
+        # If this is the first time for a new command
+        riding_index += 1
+        if(riding_index == 0):
             current_command = "/summon item ~ ~ ~ {{Item:{{id:\"{name}\",Count:{cnt}}}".format(name= minecraft_id, cnt = count)
             continue
         
-        temp_current_command = current_command + (", Passengers:[" if item_index == 1 else ",") + "{{id:item,Item:{{id:\"{name}\",Count:{cnt}}}}}".format(name= minecraft_id, cnt = count)
+        temp_current_command = current_command + (", Passengers:[" if riding_index == 1 else ",") + "{{id:item,Item:{{id:\"{name}\",Count:{cnt}}}}}".format(name= minecraft_id, cnt = count)
 
         # Make sure command fits in command window
         if(len(temp_current_command) > (254)):
-            commands.append(current_command + "]}")
-            item_index = -1
+            # if we have ended up here, then there is a command that has not been added despite the items left being recalculated, this must be taken into account
+            items_left += count
+
+            # Check if only one kind of item is in command, if so change the command to a give command to increase the max possible items given in one command
+            if(unique_item_types_counter <= 1):
+                # If there are more than 6400 items, multiple give commands are required
+                if(items_left > 6400):
+                    items_left = original_count - 6400
+                    count = 6400
+                else:
+                    items_left = 0
+                    count = original_count
+            
+                # Create the give command
+                current_command = f"/give @p {minecraft_id} {count}"
+                commands.append(current_command)
+            else:
+                commands.append(current_command + "]}")
+                original_count = items_left
+
+            riding_index = -1
+            unique_item_types_counter = 0
             current_command = ""
             continue
     
@@ -253,9 +343,6 @@ def get_item_command(profile_controller):
     
     # Append the final command
     if(current_command != ""):
-        commands.append(current_command + ("}" if item_index == 0 else "]}"))
+        commands.append(current_command + ("}" if riding_index == 0 else "]}"))
 
     return commands
-
-# def delete_items():
-#     profile_controller.get_achievements_repo().clear_achievements()

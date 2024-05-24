@@ -412,7 +412,7 @@ HALO_KILLSTREAK_STATES = [
             id_="cave_killstreak_1",
             medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
             medal_sound=sound_path("orb"),
-            name="Bottle o' Enchant ing",
+            name="Bottle o' Enchanting",
             name_jp="エンチャントの瓶",
             game_id="halo_3",
             rank=3,
@@ -604,7 +604,7 @@ HALO_KILLING_SPREE_STATES = [
         name_jp="治癒のスプラッシュポーションII",
         game_id="halo_3",
         rank=20,
-        minecraft_id="minecraft:splash_potion{Potion:\"minecraft:strong_healing\"}"
+        minecraft_id="minecraft:healing_potion_ii"  # See menu for special items
     ),
     KillingSpreeNoMedalState(rank=21),
     KillingSpreeNoMedalState(rank=22),
@@ -916,7 +916,7 @@ HALO_5_MULTIKILL_STATES = [
         name_jp="ロケット花火",
         game_id="halo_5",
         rank=9,
-        minecraft_id="minecraft:firework_rocket"
+        minecraft_id="minecraft:random_firework"  # See menu for special items
     ),
     EndState(
         medal_state=MultikillMedalState(
