@@ -203,7 +203,7 @@ def show_give_item_popup(profile_controller):
         retval = msg.exec() 
 
         # check for abort clicked
-        if(retval != QMessageBox.StandardButton.Ok):
+        if(retval != QMessageBox.StandardButton.OK):
             return
 
     # Ask user if they want database reset
