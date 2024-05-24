@@ -183,7 +183,7 @@ def set_check_for_auto_switch_game(action, load_auto_switch_game_status):
 
 def show_give_item_popup(profile_controller):
 
-    commands = get_item_command(profile_controller);
+    commands = get_item_command(profile_controller)
 
     # Check if there are any commands
     if(len(commands) <= 0):
@@ -193,7 +193,7 @@ def show_give_item_popup(profile_controller):
         msg.setStandardButtons(QMessageBox.StandardButton.Abort)
         return
 
-    retval = QMessageBox.StandardButton.Ok;
+    retval = QMessageBox.StandardButton.Ok
 
     for command in commands:
         msg = QMessageBox()
@@ -205,7 +205,7 @@ def show_give_item_popup(profile_controller):
 
         # check for abort clicked
         if(retval != QMessageBox.StandardButton.Ok):
-            return;
+            return
 
     # Ask user if they want database reset
     msg2 = QMessageBox()
@@ -258,4 +258,4 @@ def get_item_command(profile_controller):
     return commands
 
 # def delete_items():
-#     profile_controller.get_achievements_repo().clear_achievements();
+#     profile_controller.get_achievements_repo().clear_achievements()
