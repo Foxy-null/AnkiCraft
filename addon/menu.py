@@ -4,6 +4,7 @@ from aqt.qt import QMessageBox
 from .config import local_conf
 from .persistence import min_datetime
 import random
+from ._vendor import pyperclip
 
 from .game import (
     load_current_game_id,
@@ -26,8 +27,8 @@ if local_conf["language"] == "ja":
     claim_items_name = "アイテムを回収する（Java版のみ）"
     claim_items_box_text = "アイテムを全て削除するには「リセット」をクリックして下さい。"
     claim_items_deleted_text = "削除が完了しました。変更を適用するには画面を開き直してください。"
-    claim_items_box_text_no_items = "回収できるアイテムがありません" # Google Translated
-    claim_items_next_command_text = "次のコマンドを表示するには[OK]を押してください。" # Google Translated
+    claim_items_box_text_no_items = "回収できるアイテムがありません"
+    claim_items_next_command_text = "上記のコマンドがクリップボードにコピーされました。\n次のコマンドを表示するには[OK]を押してください。" 
 else:
     automatically_switch_games = "&Automatically Switch Games"
     change_biome = "Change Biome"
@@ -41,7 +42,7 @@ else:
     claim_items_box_text = "Click reset to clear the unclaimed items"
     claim_items_deleted_text = "Deleted, You may have to refresh your screen by changing tabs"
     claim_items_box_text_no_items = "No items to claim"
-    claim_items_next_command_text = "Press ok to display next command"
+    claim_items_next_command_text = "The above command has been copied to the clipboard.\nPress ok to display next command"
 
 def connect_menu(main_window, profile_controller, network_thread):
     # probably overdoing it with partial functions here... but none of these
@@ -196,14 +197,14 @@ def show_give_item_popup(profile_controller):
 
     for command in commands:
         msg = QMessageBox()
-        msg.setText(f"{command}")
-        msg.setInformativeText(claim_items_next_command_text)
+        msg.setText(f"{command}"+"\n"+claim_items_next_command_text)
         msg.setWindowTitle(claim_items_name)
         msg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Abort)
+        pyperclip.copy(command)
         retval = msg.exec() 
 
         # check for abort clicked
-        if(retval != QMessageBox.StandardButton.OK):
+        if(retval != QMessageBox.StandardButton.Ok):
             return
 
     # Ask user if they want database reset
