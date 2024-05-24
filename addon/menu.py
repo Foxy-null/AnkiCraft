@@ -235,7 +235,7 @@ def get_special_item_command(id, count):
         cmd_count = min(count, 100)
 
         # Supports 1.20.6
-        if(local_conf["minecraft_version_is_pre_1_20_6"] == "false"):
+        if(local_conf["minecraft_version_is_pre_1_20_5"] == "false"):
             return f'/give @p splash_potion[potion_contents={{potion:"strong_healing"}}] {cmd_count}', final_count
         
         # Supports between 1.13 and 1.20.5
@@ -248,7 +248,7 @@ def get_special_item_command(id, count):
         flight_time = random.randrange(0, 5) # random flight time
 
         # Supports 1.20.6
-        if(local_conf["minecraft_version_is_pre_1_20_6"] == "false"):
+        if(local_conf["minecraft_version_is_pre_1_20_5"] == "false"):
             shape = random.choice(["small_ball", "large_ball", "star", "creeper", "burst"])
             has_trail = random.choice(["true", "false"])
             has_twinkle = random.choice(["true", "false"])
