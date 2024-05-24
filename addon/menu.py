@@ -4,6 +4,7 @@ from aqt.qt import QMenu
 from aqt.qt import QMessageBox
 from .config import local_conf
 from .persistence import min_datetime
+import math
 
 from .game import (
     load_current_game_id,
@@ -23,11 +24,11 @@ if local_conf["language"] == "ja":
     farm_name = "食料畑"
     forest_name = "森林バイオーム"
     trap_tower_name = "トラップタワー"
-    claim_items_name = "クレーム品目" # Google translated
-    claim_items_box_text = "未請求のアイテムをクリアするには、「リセット」をクリックします" # Google translated
-    claim_items_deleted_text = "削除されました。タブを変更して画面を更新する必要がある場合があります" # Google translated
-    claim_items_box_text_no_items = "請求できるアイテムはありません" # Google Translated
-    claim_items_next_command_text = "[OK] を押して次のコマンドを表示します" # Google Translated
+    claim_items_name = "アイテムを回収する（Java版のみ）"
+    claim_items_box_text = "アイテムを全て削除するには「リセット」をクリックして下さい。"
+    claim_items_deleted_text = "削除が完了しました。変更を適用するには画面を開き直してください。"
+    claim_items_box_text_no_items = "回収できるアイテムがありません" # Google Translated
+    claim_items_next_command_text = "次のコマンドを表示するには[OK]を押してください。" # Google Translated
 else:
     automatically_switch_games = "&Automatically Switch Games"
     change_biome = "Change Biome"
@@ -37,7 +38,7 @@ else:
     farm_name = "Farm"
     forest_name = "Forest"
     trap_tower_name = "Trap Tower"
-    claim_items_name = "Claim Items"
+    claim_items_name = "Claim Items (Java edition only)"
     claim_items_box_text = "Click reset to clear the unclaimed items"
     claim_items_deleted_text = "Deleted, You may have to refresh your screen by changing tabs"
     claim_items_box_text_no_items = "No items to claim"
@@ -233,7 +234,7 @@ def get_item_command(profile_controller):
     for m in medal_types(profile_controller.get_achievements_repo().achievements_for_whole_collection_since(min_datetime)):
         minecraft_id = m.medal.minecraft_id.replace("minecraft:", "")
         count = m.count
-        item_index += 1;
+        item_index += 1
 
         if(item_index == 0):
             current_command = "/summon item ~ ~ ~ {{Item:{{id:\"{name}\",Count:{cnt}}}".format(name= minecraft_id, cnt = count)
@@ -246,7 +247,7 @@ def get_item_command(profile_controller):
             commands.append(current_command + "]}")
             item_index = -1
             current_command = ""
-            continue;
+            continue
     
         current_command = temp_current_command
     
