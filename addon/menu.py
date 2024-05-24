@@ -195,9 +195,11 @@ def show_give_item_popup(profile_controller):
 
     retval = QMessageBox.StandardButton.Ok
 
+    command_index = 0
     for command in commands:
+        command_index += 1;
         msg = QMessageBox()
-        msg.setText(f"{command}"+"\n"+claim_items_next_command_text)
+        msg.setText(f"{command}"+"\n"+claim_items_next_command_text+f" ({command_index}/{len(commands)})")
         msg.setWindowTitle(claim_items_name)
         msg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Abort)
         pyperclip.copy(command)
@@ -278,6 +280,8 @@ def get_item_command(profile_controller):
     medals = medal_types(profile_controller.get_achievements_repo().achievements_for_whole_collection_since(min_datetime))
     username = local_conf["minecraft_username"]
 
+    item_dict = {}
+
     # variables required to percist outside the loop
     commands = []
     medal_index = -1
@@ -285,14 +289,21 @@ def get_item_command(profile_controller):
     minecraft_id = "pufferfish" # should never be given, i just find them funny
     count = 0
 
-    while(medal_index < len(medals) - 1):
+    for m in medals:
+        if(m.medal.minecraft_id not in item_dict):
+            item_dict[m.medal.minecraft_id] = m.count
+            continue
+
+        item_dict[m.medal.minecraft_id] += m.count
+
+    for item in item_dict:
     
         # Get the item
         if(items_left <= 0): # The old item has been completely added, a new item can now be added
             # Get the data for the item
             medal_index += 1
-            minecraft_id = medals[medal_index].medal.minecraft_id.replace("minecraft:", "")
-            count = medals[medal_index].count
+            minecraft_id = item.replace("minecraft:", "")
+            count = item_dict[item]
 
             items_left = count
 
