@@ -197,7 +197,7 @@ def show_give_item_popup(profile_controller):
 
     command_index = 0
     for command in commands:
-        command_index += 1;
+        command_index += 1
         msg = QMessageBox()
         msg.setText(f"{command}"+"\n"+claim_items_next_command_text+f" ({command_index}/{len(commands)})")
         msg.setWindowTitle(claim_items_name)
@@ -282,7 +282,7 @@ def get_item_command(profile_controller):
 
     item_dict = {}
 
-    # variables required to percist outside the loop
+    # variables required to persist outside the loop
     commands = []
     medal_index = -1
     items_left = 0

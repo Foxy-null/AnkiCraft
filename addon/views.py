@@ -13,7 +13,7 @@ from .config import local_conf
 # Config start (also in line 120)
 
 if local_conf["language"] == "ja":
-    all_unclaimed_items = "未回収の全てのアイテム:"
+    all_unclaimed_items = "未回収のアイテム:"
     items_in_this_deck = "このデッキで獲得したアイテム:"
     cave_name = "洞窟"
     ocean_name = "海バイオーム"
@@ -22,7 +22,7 @@ if local_conf["language"] == "ja":
     forest_name = "森林バイオーム"
     trap_tower_name = "トラップタワー"
 else:
-    all_unclaimed_items = "All unclaimed items:"
+    all_unclaimed_items = "Unclaimed items:"
     items_in_this_deck = "Items collected in this deck:"
     cave_name = "Cave"
     ocean_name = "Ocean"

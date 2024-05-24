@@ -781,16 +781,29 @@ MW2_KILLSTREAK_STATES = [
         rank=10,
         minecraft_id="minecraft:tnt"
     ),
+    KillingSpreeMedalState(
+        id_="輝くイカスミ",
+        medal_image=image_path("mw2/Glow_Ink_Sac.webp"),
+        medal_sound=sound_path("item"),
+        name="Glow Ink Sac",
+        name_jp="輝くイカスミ",
+        game_id="mw2",
+        rank=11,
+        minecraft_id="minecraft:glow_ink_sac"
+    ),
+    KillingSpreeNoMedalState(rank=12),
+    KillingSpreeNoMedalState(rank=13),
+    KillingSpreeNoMedalState(rank=14),
     EndState(
         medal_state=KillingSpreeMedalState(
-            id_="輝くイカスミ",
-            medal_image=image_path("mw2/Glow_Ink_Sac.webp"),
-            medal_sound=sound_path("item"),
-            name="Glow Ink Sac",
-            name_jp="輝くイカスミ",
+            id_="フグ",
+            medal_image=image_path("mw2/Pufferfish.png"),
+            medal_sound=sound_path("fish"),
+            name="Pufferfish",
+            name_jp="フグ",
             game_id="mw2",
-            rank=11,
-            minecraft_id="minecraft:glow_ink_sac"
+            rank=15,
+            minecraft_id="minecraft:pufferfish"
         ),
         index_to_return_to=1,
     ),
@@ -1549,7 +1562,7 @@ trap_tower_layer1 = [
 #         rank=34,
 #     ),
 #     EndState(
-#         KillingSpreeMedalState(
+#         medal_state=KillingSpreeMedalState(
 #             id_="trap_tower_unstoppable",
 #             medal_image=image_path("trap_tower/unstoppable.png"),
 #             name="Unstoppable",
@@ -1564,7 +1577,7 @@ trap_tower_layer1 = [
 
 trap_tower_layer3 = [
     EndState(
-        KillingSpreeMedalState(
+        medal_state=KillingSpreeMedalState(
             id_="trap_tower_layer3_0",
             minecraft_id="minecraft:experience_bottle",
             medal_image=image_path("halo_5/minecraft-bottle-o-enchanting.gif"),
