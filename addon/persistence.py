@@ -15,7 +15,6 @@ min_datetime = datetime(
     year=2019, month=12, day=25
 )  # day I started making the addon :-)
 
-
 @attr.s(frozen=True)
 class DbSettings:
     db_path = attr.ib()
@@ -156,6 +155,14 @@ class AchievementsRepository:
             )
 
             return dict(row for row in cursor)
+        
+    def clear_achievements(self):
+        with self.get_db_connection() as conn:
+            conn.execute(
+                f"""
+                DELETE FROM achievements
+                """
+            )
 
 
 @attr.s

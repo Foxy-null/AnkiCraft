@@ -52,11 +52,8 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 1. Select biome to explore
 2. Collect some items
-3. Claim items yourself manually in your Minecraft world in anyway.
-    `ex: by using "/give" command.`
-   
-   (You can learn how to use the `/give` command from [here](https://minecraft.fandom.com/wiki/Commands/give)!)
-5. delete `_AnkiCraft.db` in `%appdata%/Anki2/your_name/collection.media` folder
+3. Claim items by clicking AnkiCraft > Claim Items and pasting in each spawn command to your Minecraft world
+4. Click reset when prompted to clear the claimed items from Anki
  
 ## Note
  

@@ -8,5 +8,8 @@
   "tooltip_color": "#323633",
   "multikill_interval_s": 5000,
   "killing_spree_interval_s": 5000,
-  "play_sound": "true"
+  "play_sound": "true",
+  "minecraft_version_is_pre_1_20_5": "true", 
+  "is_bedrock_edition": "false",
+  "minecraft_username": "@p"
 }

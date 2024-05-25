@@ -73,6 +73,8 @@ else:
 
         """
 
+        unicode = str # Compatibility with python 3.9
+
         with io.open(meta_path, "w", encoding="utf-8") as f:
             f.write(
                 unicode(
