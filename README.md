@@ -17,6 +17,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
  - Fixed [this Issue](https://github.com/jac241/anki_killstreaks/issues/46) of Killstreaks addon
  - Added "All unclaimed items" field instead of "Today's all medals" and "All medals from This deck" fields.
  - Your unclaimed Items syncs between computers now!
+ - Added Claim items in Minecraft feature. (Thanks to [Kyron](https://github.com/AvianSamurai)!)
  - ...and some more bits (I don't remember haha)
 
 ## Requirements
@@ -67,6 +68,8 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 ## Special Thanks
 
 ### [jac241](https://github.com/jac241) - The creator of the wonderful Killstreaks add-on
+
+### [Kyron](https://github.com/AvianSamurai) - A great contributor to the creation of the item claiming function!
 
 ### [Shigeyuki](https://www.patreon.com/Shigeyuki) - Anki's 23.10+ version support would not have been possible without his contributions.
 
