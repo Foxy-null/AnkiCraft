@@ -85,7 +85,6 @@ _profile_controller = ProfileController(
 # for debugging
 mw.killstreaks_profile_controller = _profile_controller
 
-
 def main():
     _wrap_anki_objects(_profile_controller)
     connect_menu(
@@ -478,6 +477,5 @@ def _get_achievements_scoped_to_deck_or_collection(
 
 def cutoff_datetime(self):
     return day_start_time(rollover_hour=self.mw.col.conf.get("rollover", 4))
-
 
 main()

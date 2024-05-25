@@ -13,6 +13,8 @@ from .config import local_conf
 # Config start (also in line 120)
 
 if local_conf["language"] == "ja":
+    all_unclaimed_items = "未回収のアイテム:"
+    items_in_this_deck = "このデッキで獲得したアイテム:"
     cave_name = "洞窟"
     ocean_name = "海バイオーム"
     overworld_name = "草原バイオーム"
@@ -20,6 +22,8 @@ if local_conf["language"] == "ja":
     forest_name = "森林バイオーム"
     trap_tower_name = "トラップタワー"
 else:
+    all_unclaimed_items = "Unclaimed items:"
+    items_in_this_deck = "Items collected in this deck:"
     cave_name = "Cave"
     ocean_name = "Ocean"
     overworld_name = "Overworld"
@@ -62,17 +66,21 @@ def TodaysMedalsJS(achievements, current_game_id):
     return AppendingInjector(
         html=MedalsOverview(
             medal_types=medal_types(achievements),
-            header_text="All unclaimed items:",
+            header_text=all_unclaimed_items,
             current_game_id=current_game_id,
         )
     )
 
 
 def TodaysMedalsForDeckJS(achievements, deck, current_game_id):
+    if local_conf["language"] == "ja":
+        items_in_function = f"「{deck.name}」内で獲得したアイテム: "
+    else:
+        items_in_function = f"All unclaimed items you collected in: {deck.name}"
     return AppendingInjector(
         html=MedalsOverview(
             medal_types=medal_types(achievements),
-            header_text=f"All unclaimed items you collected in: {deck.name}",
+            header_text=items_in_function,
             current_game_id=current_game_id,
         )
     )
@@ -152,7 +160,7 @@ _templates_dir = Path(__file__).parent / "templates"
 def MedalsOverview(
     medal_types,
     current_game_id,
-    header_text="Items collected in this deck:",
+    header_text=items_in_this_deck,
 ):
     with open(_templates_dir / overview_font, "r", encoding="utf-8") as f:
         template = Template(f.read())
