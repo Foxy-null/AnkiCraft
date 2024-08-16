@@ -28,6 +28,9 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 ## Installation
 
+> [!Caution]  
+> Users of the "Contanki" add-on will need to change their controller settings, see the "For Contanki Users" section below.
+
 1. Thumbs up to this add-on in AnkiWeb page if you like it :)
     - (Also star to GitHub repository too! Greatly appreciate you!) 
 
@@ -37,9 +40,6 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 4. add `AnkiCraft` folder in theme folder.
   (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images`)
-
-> [!Caution]  
-> Users of the "Contanki" add-on will need to change their controller settings, see the "For Contanki Users" section below.
 
 <details>
 <summary><h2>日本語</h2></summary>
