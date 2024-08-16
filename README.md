@@ -4,10 +4,11 @@
 
 https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-ff9f852f27a5
 
-<div style="text-align: center;"></div>
-
-![anki_20230930_160544_459](https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6)
-![anki_20230930_155827_458](https://github.com/AnKing-VIP/anki-audiovisual-feedback/assets/72304646/b8a7736e-d896-45b7-92a5-5c46f1ef0ac7)
+<details>
+<summary>More Screenshots</summary>
+<img src="https://github.com/Foxy-null/AnkiCraft/assets/72304646/ac31a2c4-ff8b-46ed-b736-7b12bea6aea6">
+<img src="https://github.com/AnKing-VIP/anki-audiovisual-feedback/assets/72304646/b8a7736e-d896-45b7-92a5-5c46f1ef0ac7">
+</details>
 
 *Achievements screen requires [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866) addon and [AnkiCraft theme](https://github.com/AnKing-VIP/anki-audiovisual-feedback/wiki/Minecraft)
 
@@ -26,8 +27,7 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
  - [AnkiCraft SFX](https://github.com/Foxy-null/AnkiCraft/raw/main/AnkiCraft.zip)
 
 ## Installation
- 
-### English
+
 1. Thumbs up to this add-on in AnkiWeb page if you like it :)
     - (Also star to GitHub repository too! Greatly appreciate you!) 
 
@@ -35,9 +35,14 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 3. Install [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866).
 
-4. add `AnkiCraft` folder in theme folder. (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images`)
+4. add `AnkiCraft` folder in theme folder.
+  (It'll be `%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images`)
 
-### 日本語
+> [!Caution]  
+> Users of the "Contanki" add-on will need to change their controller settings, see the "For Contanki Users" section below.
+
+<details>
+<summary><h2>日本語</h2></summary>
 1. （このアドオンを気に入ってくださったら）高評価をする。
     - (GitHubのリポジトリにもStarして頂くと泣くほど嬉しいです！)
 
@@ -47,8 +52,48 @@ https://github.com/Foxy-null/AnkiCraft/assets/72304646/9066b4c9-93e5-4490-a10a-f
 
 4. [Audiovisual Feedback](https://ankiweb.net/shared/info/231569866)をインストールする。
 
-5. `AnkiCraft`フォルダーをテーマフォルダー内に置く。（こんな感じになるはず→`%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images...`）
+5. `AnkiCraft`フォルダーをテーマフォルダー内に置く。
+  （こんな感じになるはず→`%appdata%\Anki2\addons21\231569866\user_files\themes\AnkiCraft\images...`）
 
+</details>
+
+> [!Caution]
+> "Contanki"アドオンを使用されている方は、ご自身のコントローラー設定を変更して頂く必要があります。詳細は "For Contanki Users"セクションをご確認ください。
+
+## For Contanki Users
+
+1. Open Contanki settings
+2. Register all answer keys as "Custom Action"
+
+Ex:
+| Custom Action | Shortcut |
+| ------------- |:--------:|
+| Againkey      | 1        |
+| Goodkey       | Space    |
+| Hardkey       | 3        |
+| Easykey       | 4        |
+
+3. Replace all "Flip Card" actions with "Goodkeys" in the `"Controller" > "Question"` tab
+4. Replace all "`(Answer)`" actions with "`(Answer)`key" in the `"Controller" > "Answer"` tab
+
+<details>
+<summary><h2>日本語</h2></summary>
+
+1. Contankiの設定を開く
+2. Ankiの回答キー全てを"Custom Action"として割り当てる
+
+例：
+| Custom Action | Shortcut |
+| ------------- |:--------:|
+| Againkey      | 1        |
+| Goodkey       | Space    |
+| Hardkey       | 3        |
+| Easykey       | 4        |
+
+3. `"Controller" > "Question"`タブに存在する全ての"Flip Card"アクションを"Goodkeys"に置き換える
+4. `"Controller" > "Answer"`タブに存在する全ての"`(回答キー名)`"を"`(回答キー名)keys`"に置き換える
+
+</details>
 ## Usage
 
 1. Select biome to explore
