@@ -85,12 +85,14 @@ _profile_controller = ProfileController(
 # for debugging
 mw.killstreaks_profile_controller = _profile_controller
 
+
 def main():
     _wrap_anki_objects(_profile_controller)
     connect_menu(
         main_window=mw, profile_controller=_profile_controller, network_thread=job_queue
     )
     _network_thread.start()
+
 
 def _wrap_anki_objects(profile_controller):
     """
@@ -159,12 +161,15 @@ def _wrap_anki_objects(profile_controller):
 
         # 修正ここから -----
         from anki.utils import pointVersion
-        if pointVersion() >= 231000: # gui_hooksに変更
 
-            gui_hooks.deck_browser_did_render.remove(todays_medals_injector) # profile変更後の重複を避ける
+        if pointVersion() >= 231000:  # gui_hooksに変更
+
+            gui_hooks.deck_browser_did_render.remove(
+                todays_medals_injector
+            )  # profile変更後の重複を避ける
             gui_hooks.deck_browser_did_render.append(todays_medals_injector)
 
-            overview_medals_injector =partial(
+            overview_medals_injector = partial(
                 inject_medals_for_deck_overview,
                 get_achievements_repo=profile_controller.get_achievements_repo,
                 get_current_game_id=profile_controller.get_current_game_id,
@@ -174,7 +179,7 @@ def _wrap_anki_objects(profile_controller):
             gui_hooks.overview_did_refresh.append(overview_medals_injector)
             # 修正ここまで -----
 
-        else: # 古いwrap
+        else:  # 古いwrap
             DeckBrowser.refresh = wrap(
                 old=DeckBrowser.refresh, new=todays_medals_injector, pos="after"
             )
@@ -192,6 +197,7 @@ def _wrap_anki_objects(profile_controller):
                 ),
                 pos="after",
             )
+
 
 _tooltipTimer = None
 _tooltipLabel = None
@@ -477,5 +483,6 @@ def _get_achievements_scoped_to_deck_or_collection(
 
 def cutoff_datetime(self):
     return day_start_time(rollover_hour=self.mw.col.conf.get("rollover", 4))
+
 
 main()
