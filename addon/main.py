@@ -222,8 +222,11 @@ def _play_next_if_idle() -> None:
 
 
 def insert_file(filename: str) -> None:
-    sfx.insert(len(sfx), SoundOrVideoTag(filename=filename))
-    _play_next_if_idle()
+    if filename is not None and os.path.exists(
+        filename
+    ):  # filenameがNoneでなく、ファイルが存在するかどうかチェック
+        sfx.insert(len(sfx), SoundOrVideoTag(filename=filename))
+        _play_next_if_idle()
 
 
 def _play(tag: AVTag) -> None:
