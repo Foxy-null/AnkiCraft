@@ -370,7 +370,11 @@ def image_path(filename):
 
 def sound_path(filename):
     random_sound = join(sfx_dir, filename)
-    return random.choice(glob.glob(random_sound + "/*"))
+    files = glob.glob(random_sound + "/*")
+    if files:
+        return random.choice(files)
+    else:
+        return None
 
 
 @attr.s(frozen=True)
