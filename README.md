@@ -147,3 +147,13 @@ Also, report in Japanese or English.
 ## Support this add-on
 
 Your [rating](https://ankiweb.net/shared/review/368161874) and star to GitHub repository will help us develop the add-on! Thank you!!!
+
+## Star History
+
+<a href="https://star-history.com/#Foxy-null/AnkiCraft&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Foxy-null/AnkiCraft&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Foxy-null/AnkiCraft&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Foxy-null/AnkiCraft&type=Date" />
+ </picture>
+</a>
