@@ -11,5 +11,6 @@
   "play_sound": "true",
   "minecraft_version_is_pre_1_20_5": "true", 
   "is_bedrock_edition": "false",
-  "minecraft_username": "@p"
+  "minecraft_username": "@p",
+	"difficulty": 2
 }

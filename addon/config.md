@@ -20,6 +20,7 @@ TODO: SOME CONFIGS NOT FUNCITONAL YET, PLACEHOLDER ONLY
 - `minecraft_username` [`string`]: Enter the username or target selector to use when generating command text.
   - Tip: For users who have spaces in your xbox gamertags, you can use double quotes with a backslash by placing it before the double quote.
   - Example: `\"Foxy null\"`
+- `difficulty` [`string`]: Number of consecutive correct answers required to add one streak
 
 ## AnkiCraft: 各種設定（日本語）
 
@@ -37,3 +38,4 @@ TODO: SOME CONFIGS NOT FUNCITONAL YET, PLACEHOLDER ONLY
 - `minecraft_username` [`string`]: コマンド生成時に使用する際に使用するユーザー名またはターゲットセレクターの設定。
   - ヒント: Xbox のゲーマータグにスペースが入っている方は、ダブルクオートの前にバックスラッシュ記号を置くことで正常にゲーマータグを記載することができます。
   - 例: `\"Foxy null\"`
+- `difficulty` [`string`]: 何問連続正解したらストリークを1追加するかの設定

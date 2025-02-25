@@ -9,14 +9,16 @@ from datetime import datetime, timedelta
 from functools import lru_cache
 import itertools
 from os.path import join, dirname
-import glob, random
+import glob
+import random
 
 from . import addons
 from ._vendor import attr
 from .config import local_conf
 
 DEFAULT_GAME_ID = "halo_3"
-all_game_ids = ["halo_3", "mw2", "halo_5", "halo_infinite", "vanguard", "trap_tower"]
+all_game_ids = ["halo_3", "mw2", "halo_5",
+                "halo_infinite", "vanguard", "trap_tower"]
 
 
 class MultikillMixin:
@@ -29,7 +31,8 @@ class MultikillMixin:
     ):
         delta = question_answered_at - question_shown_at
         return (
-            timedelta(seconds=min_interval_s) <= delta < timedelta(seconds=interval_s)
+            timedelta(seconds=min_interval_s) <= delta < timedelta(
+                seconds=interval_s)
         )
 
 
@@ -300,15 +303,23 @@ class AnswerShownState:
         answer_shown_at,
         interval_s,
         current_streak_index,
+        correct_count=0,
     ):
         self.states = states
         self._question_shown_at = question_shown_at
         self._answer_shown_at = answer_shown_at
         self._interval_s = interval_s
         self._current_streak_index = current_streak_index
+        self.correct_count = correct_count
 
     def on_answer(self, card_did_pass):
-        if self._advancement_requirements_met(card_did_pass, self._answer_shown_at):
+        if card_did_pass:
+            self.correct_count += 1  # 正解カウントを増やす
+        else:
+            self.correct_count = 0  # 間違えたらカウントリセット
+        if self.correct_count >= local_conf[
+            "difficulty"
+        ] and self._advancement_requirements_met(card_did_pass, self._answer_shown_at):
             return self._advanced_state_machine()
         elif card_did_pass:
             # want this one to count for first kill in new streak
