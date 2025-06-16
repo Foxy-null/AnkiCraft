@@ -1,0 +1,14 @@
+{
+	"name": "AnkiCraft Development",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.black-formatter"
+			]
+		}
+	},
+	"postCreateCommand": "pip install PyQt6 aqt",
+	"remoteUser": "vscode"
+}
