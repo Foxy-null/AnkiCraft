@@ -10,7 +10,8 @@ import unittest
 import io
 import textwrap
 
-from .. import six
+# import six
+from . import six
 
 from .parser import Loader, ConfigParser, SafeConfigParser
 
@@ -218,8 +219,8 @@ class TestIniherit(unittest.TestCase):
 
   #----------------------------------------------------------------------------
   def test_install_globally(self):
-    from anki_killstreaks._vendor.iniherit.parser import CP
-    from anki_killstreaks._vendor.iniherit.mixin import install_globally, uninstall_globally
+    from anki_killstreaks._vendor.iniherit.parser import CP #type: ignore
+    from anki_killstreaks._vendor.iniherit.mixin import install_globally, uninstall_globally #type: ignore
 
     files = {k: textwrap.dedent(v) for k, v in {
       'base.ini'   : '[DEFAULT]\nkw = base-kw\n',
@@ -314,7 +315,7 @@ class TestIniherit(unittest.TestCase):
 
   #----------------------------------------------------------------------------
   def test_interpolation_super_breadth(self):
-    from anki_killstreaks._vendor.iniherit import InterpolationMissingSuperError
+    from anki_killstreaks._vendor.iniherit import InterpolationMissingSuperError #type: ignore
     files = {k: textwrap.dedent(v) for k, v in {
       'base.ini' : '''\
         [loggers]
@@ -356,7 +357,7 @@ class TestIniherit(unittest.TestCase):
 
   #----------------------------------------------------------------------------
   def test_interpolation_super_invalid(self):
-    from anki_killstreaks._vendor.iniherit import InterpolationMissingSuperError
+    from anki_killstreaks._vendor.iniherit import InterpolationMissingSuperError #type: ignore
     files = {k: textwrap.dedent(v) for k, v in {
       'base.ini' : '''\
         [DEFAULT]
@@ -393,8 +394,8 @@ class TestIniherit(unittest.TestCase):
   #----------------------------------------------------------------------------
   def test_interpolation_env(self):
     import os
-    from six.moves.configparser import InterpolationDepthError
-    from anki_killstreaks._vendor.iniherit import InterpolationMissingEnvError
+    from six.moves.configparser import InterpolationDepthError #type: ignore
+    from anki_killstreaks._vendor.iniherit import InterpolationMissingEnvError #type: ignore
     files = {k: textwrap.dedent(v) for k, v in {
       'config.ini' : '''\
         [section]

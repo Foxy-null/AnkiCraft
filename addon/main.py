@@ -288,7 +288,7 @@ def showToolTip(medals, period=local_conf["duration"]):
     p.setColor(QPalette.ColorRole.WindowText, QColor("#f7f7f7"))
     lab.setPalette(p)
     vdiff = (local_conf["image_height"] - 128) / 2
-    lab.move(aw.mapToGlobal(QPoint(0, -260 - vdiff + aw.height())))
+    lab.move(aw.mapToGlobal(QPoint(0, int(-260 - vdiff + aw.height()))))
     lab.show()
     _tooltipTimer = mw.progress.timer(period, closeTooltip, False)
     _tooltipLabel = lab

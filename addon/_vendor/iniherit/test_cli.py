@@ -7,9 +7,10 @@
 #------------------------------------------------------------------------------
 
 import unittest
-from .. import six
 
-from .cli import flatten
+from . import six
+
+from .cli import flatten #type: ignore
 
 #------------------------------------------------------------------------------
 class TestIniheritCli(unittest.TestCase):
