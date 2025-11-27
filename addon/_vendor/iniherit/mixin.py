@@ -6,8 +6,11 @@
 # copy: (C) Copyright 2013 Cadit Health Inc., All Rights Reserved.
 #------------------------------------------------------------------------------
 
-from .. import six
-import configparser as CP
+# import six
+# from six.moves import configparser as CP
+from . import six
+CP = six.moves.configparser
+
 
 from .parser import IniheritMixin
 from .interpolation import BasicInterpolationMixin
@@ -23,12 +26,16 @@ interpolation_attrs = [attr for attr in dir(BasicInterpolationMixin) if not attr
 _replacements = [
   (IniheritMixin, CP.RawConfigParser,  raw_attrs),
   (IniheritMixin, CP.ConfigParser,     base_attrs),
-  (IniheritMixin, CP.SafeConfigParser, base_attrs),
 ]
 
-_replacements += [
-  (BasicInterpolationMixin, CP.BasicInterpolation, interpolation_attrs),
-]
+import sys
+if sys.version_info < (3, 2, 0):
+  _replacements.append((IniheritMixin, CP.SafeConfigParser, base_attrs))
+
+if six.PY3:
+  _replacements += [
+    (BasicInterpolationMixin, CP.BasicInterpolation, interpolation_attrs),
+  ]
 
 #------------------------------------------------------------------------------
 def install_globally():
@@ -47,6 +54,10 @@ def install_globally():
                 '_iniherit_' + attr, getattr(target, attr))
       meth = getattr(source, attr)
       if six.callable(meth):
+        if six.PY2:
+          import new #type: ignore
+          meth = new.instancemethod(meth.__func__, None, target)
+        else:
           meth = meth.__get__(None, target)
       setattr(target, attr, meth)
 

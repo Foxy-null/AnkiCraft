@@ -37,7 +37,8 @@ import types
 import textwrap
 import weakref
 
-import pkg_resources
+# import pkg_resources
+import importlib.resources
 from .. import sqlparse
 
 from . import exceptions
@@ -461,15 +462,24 @@ def read_migrations(*sources):
         if package_match:
             package_name = package_match.group(1)
             resource_dir = package_match.group(2)
-            paths = [
-                pkg_resources.resource_filename(
-                    package_name, "{}/{}".format(resource_dir, f)
-                )
-                for f in pkg_resources.resource_listdir(
-                    package_name, resource_dir
-                )
-                if _is_migration_file(f)
-            ]
+            # paths = [
+            #     pkg_resources.resource_filename(
+            #         package_name, "{}/{}".format(resource_dir, f)
+            #     )
+            #     for f in pkg_resources.resource_listdir(
+            #         package_name, resource_dir
+            #     )
+            #     if _is_migration_file(f)
+            # ]
+
+            ### from Anki25.06+
+            package_files = importlib.resources.files(package_name).joinpath(resource_dir)
+            paths = []
+            for f in package_files.iterdir():
+                if _is_migration_file(f.name):
+                    with importlib.resources.as_file(package_files.joinpath(f.name)) as path:
+                        paths.append(str(path))
+            #######
 
         else:
             paths = [

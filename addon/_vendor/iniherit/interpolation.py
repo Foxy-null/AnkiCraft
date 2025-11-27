@@ -9,13 +9,17 @@
 import re
 import os
 
-from .. import six
-import configparser as CP
-
+from . import six
+# from .six.moves import configparser as CP
+CP = six.moves.configparser
 #------------------------------------------------------------------------------
 
-_real_BasicInterpolation              = CP.BasicInterpolation
-_real_BasicInterpolation_before_get   = CP.BasicInterpolation.before_get
+if six.PY3:
+  _real_BasicInterpolation              = CP.BasicInterpolation
+  _real_BasicInterpolation_before_get   = CP.BasicInterpolation.before_get
+else:
+  _real_BasicInterpolation              = object
+  _real_BasicInterpolation_before_get   = None
 
 #------------------------------------------------------------------------------
 class InterpolationMissingEnvError(CP.InterpolationMissingOptionError): pass

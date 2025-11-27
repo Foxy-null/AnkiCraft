@@ -10,9 +10,14 @@ import io
 import os.path
 import warnings
 
-from .. import six
-import configparser as CP
-import urllib
+# import six
+# from six.moves import configparser as CP
+# from six.moves import urllib
+
+from . import six
+CP = six.moves.configparser
+urllib = six.moves.urllib
+
 try:
   from collections import OrderedDict
 except ImportError:
@@ -24,17 +29,23 @@ except ImportError:
 
 from . import interpolation
 
-__all__ = (
+__all__ = [
   'Loader', 'IniheritMixin', 'RawConfigParser',
-  'ConfigParser', 'SafeConfigParser',
+  'ConfigParser',
   'DEFAULT_INHERITTAG',
-)
+]
+
+import sys
+if sys.version_info < (3, 2, 0):
+  __all__.append('SafeConfigParser')
 
 #------------------------------------------------------------------------------
 
 _real_RawConfigParser  = CP.RawConfigParser
 _real_ConfigParser     = CP.ConfigParser
-_real_SafeConfigParser = CP.SafeConfigParser
+
+if sys.version_info < (3, 2, 0):
+  _real_SafeConfigParser = CP.SafeConfigParser
 
 DEFAULT_INHERITTAG = '%inherit'
 
@@ -183,12 +194,17 @@ class IniheritMixin(object):
 
   #----------------------------------------------------------------------------
   def _im_setraw(self, parser, section, option, value):
+    if six.PY3 and hasattr(parser, '_interpolation'):
+      # todo: don't do this for systems that have
+      #       http://bugs.python.org/issue21265 fixed
       try:
         tmp = parser._interpolation.before_set
         parser._interpolation.before_set = lambda self,s,o,v,*a,**k: v
         _real_RawConfigParser.set(parser, section, option, value)
       finally:
         parser._interpolation.before_set = tmp
+    else:
+      _real_RawConfigParser.set(parser, section, option, value)
 
   #----------------------------------------------------------------------------
   def _interpolate_with_vars(self, parser, section, option, rawval):
@@ -209,6 +225,12 @@ class IniheritMixin(object):
     base_interpolate = _get_real_interpolate(self)
     return interpolation.interpolate(
       self, base_interpolate, section, option, rawval, vars)
+  if not hasattr(_real_ConfigParser, '_interpolate') and not six.PY3:
+    warnings.warn(
+      'ConfigParser did not have a "_interpolate" method'
+      ' -- iniherit may be broken on this platform',
+      RuntimeWarning)
+
 
 #------------------------------------------------------------------------------
 # todo: i'm a little worried about the diamond inheritance here...
@@ -223,11 +245,12 @@ class ConfigParser(RawConfigParser, _real_ConfigParser):
     loader = kw.pop('loader', None)
     RawConfigParser.__init__(self, loader=loader)
     _real_ConfigParser.__init__(self, *args, **kw)
-class SafeConfigParser(ConfigParser, _real_SafeConfigParser):
-  def __init__(self, *args, **kw):
-    loader = kw.pop('loader', None)
-    ConfigParser.__init__(self, loader=loader)
-    _real_SafeConfigParser.__init__(self, *args, **kw)
+if sys.version_info < (3, 2, 0):
+  class SafeConfigParser(ConfigParser, _real_SafeConfigParser):
+    def __init__(self, *args, **kw):
+      loader = kw.pop('loader', None)
+      ConfigParser.__init__(self, loader=loader)
+      _real_SafeConfigParser.__init__(self, *args, **kw)
 
 
 #------------------------------------------------------------------------------
